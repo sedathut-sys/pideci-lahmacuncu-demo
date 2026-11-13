@@ -29,3 +29,7 @@ GitHub Pages üzerinde müşterilere gösterilecek **etkileşimli demo site**. G
 ## Durum
 
 13 Kasım 2026: Public Astro/React kaynakları GitHub'a aktarıldı. PR #1 üzerinde 19/19 test, kalite kontrolleri, Astro build ve çıktı doğrulama başarıyla geçti. GitHub Pages'in ilk aktif yayını ayrı olarak doğrulanmalıdır. Cloudflare hosting bağlantısı yapılmadı.
+
+### GitHub Pages ilk etkinleştirme
+
+13 Kasım 2026: Kullanıcı, `Settings → Pages → Source = GitHub Actions` seçeneğinin etkin olduğunu ekran görüntüsüyle doğruladı. Bu README güncellemesi, ilk Pages dağıtımının `main` dalında yeniden denenmesi için kaydedildi. Canlı site açılmadan yayın başarılı kabul edilmez.
