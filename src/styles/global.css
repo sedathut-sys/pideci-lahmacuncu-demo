@@ -148,3 +148,55 @@
   .add-button{min-width:70px;padding:9px}
 }
 @media(min-width:521px){.hero-visual .hero-image{object-fit:cover;border-radius:24px;max-width:100%;height:auto;max-height:500px;box-shadow:0 22px 60px #3a251a33}}
+
+/* Aşama 5.8 — sipariş deneyimi: ürün seçenekleri, sabit eylem ve kolay sepet dönüşü */
+.menu-section{scroll-margin-top:88px}
+.config-modal{display:flex;flex-direction:column;overflow:hidden;max-height:min(90dvh,850px);padding:0}
+.config-modal>.close-icon{z-index:4;right:18px;top:18px}
+.config-options-scroll{overflow-y:auto;overscroll-behavior:contain;min-height:0;flex:1;padding:24px 26px 6px}
+.config-sticky-actions{flex:none;background:#fffdf9;border-top:1px solid #e8dcd0;padding:10px 26px max(18px,env(safe-area-inset-bottom));box-shadow:0 -8px 18px #3b211008}
+.config-sticky-actions .config-bottom{padding:0 0 8px;border-top:0}
+.config-sticky-actions .option-summary{margin:4px 0 8px}
+.config-sticky-actions .full-button{margin-top:8px;min-height:48px}
+.cart-continue-link{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:13px 15px;margin:0 0 18px;background:#f7eae0;border:1px solid #ebd3c3;border-radius:11px;color:#923825;font-weight:800;text-decoration:none;min-height:48px;width:100%}
+.cart-continue-link:hover,.cart-continue-link:focus-visible{background:#eed9cb;color:#772a19}
+.mobile-cart-bar{display:none}
+.add-confirm-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:110;background:#263b2d;color:white;display:flex;gap:14px;align-items:center;justify-content:space-between;padding:10px 13px 10px 15px;border-radius:13px;box-shadow:0 14px 40px #162e1d55;max-width:calc(100vw - 28px);width:max-content;min-width:min(400px,calc(100vw - 28px));font-size:13px;font-weight:700}
+.add-confirm-toast span{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.add-confirm-toast button{border:1px solid #a7c6ae;border-radius:9px;color:#fff;background:#345f41;min-height:44px;padding:8px 12px;white-space:nowrap;font:inherit}
+@media(max-width:800px){
+ .floating-cart{display:none!important}
+ .mobile-cart-bar{position:fixed;z-index:70;display:flex;left:0;right:0;bottom:0;padding:9px 14px max(10px,env(safe-area-inset-bottom));border-top:1px solid #e0cabc;background:#fffdf9;box-shadow:0 -8px 30px #4a301b24;gap:14px;align-items:center;justify-content:space-between}
+ .mobile-cart-count{display:flex;flex-direction:column;gap:1px;min-width:0}
+ .mobile-cart-count span{font-size:12px;color:#75685d}
+ .mobile-cart-count strong{font-size:18px;color:#8d3524;white-space:nowrap}
+ .mobile-cart-bar>button{display:flex;align-items:center;justify-content:center;gap:7px;background:#a83c29;border:0;color:#fff;border-radius:11px;padding:10px 13px;min-height:48px;font-weight:800;font-size:14px;white-space:nowrap}
+ main.has-cart+.site-footer{padding-bottom:96px}
+ .add-confirm-toast{bottom:calc(76px + env(safe-area-inset-bottom));left:14px;right:14px;transform:none;width:auto;min-width:0}
+ .product-backdrop{align-items:flex-end;justify-content:center;padding:0}
+ .product-backdrop .config-modal{width:100%;max-width:100%;max-height:88dvh;border-radius:22px 22px 0 0;box-shadow:0 -14px 48px #0004}
+ .product-backdrop .config-options-scroll{padding:17px 17px 6px}
+ .product-backdrop .config-head{flex-direction:row;align-items:center;gap:12px;padding-right:42px}
+ .product-backdrop .config-head img{height:74px;width:78px;min-width:78px;object-fit:cover;border-radius:10px}
+ .product-backdrop .config-head h3{font-size:20px;margin:4px 0 3px;line-height:1.2}
+ .product-backdrop .config-head p:not(.overline){font-size:11px;line-height:1.4;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+ .product-backdrop .config-modal>.close-icon{right:13px;top:13px}
+ .product-backdrop .choices{margin:12px 0 0;padding:12px 0 3px}
+ .product-backdrop .choices legend{padding-top:10px}
+ .product-backdrop .choice-row{min-height:44px}
+ .product-backdrop .config-sticky-actions{padding:9px 17px max(14px,env(safe-area-inset-bottom))}
+ .product-backdrop .config-bottom{padding-bottom:5px}
+ .product-backdrop .option-summary{margin:3px 0 6px}
+ .product-backdrop .full-button{margin-top:4px;min-height:50px}
+ .how-section{padding:48px 0}
+ .how-grid>div:first-child>p:not(.overline){line-height:1.6}
+}
+@media(max-width:360px){
+ .mobile-cart-count strong{font-size:16px}
+ .mobile-cart-bar>button{font-size:12px;padding:9px 11px;gap:5px}
+ .product-backdrop .config-head img{height:67px;width:67px;min-width:67px}
+ .product-backdrop .config-head h3{font-size:18px}
+ .add-confirm-toast{font-size:11px;gap:8px;padding:8px}
+ .add-confirm-toast button{font-size:12px;padding:6px 9px}
+}
+@media(max-height:670px) and (max-width:800px){.product-backdrop .config-modal{max-height:94dvh}}
