@@ -32,3 +32,9 @@ jobs:
         run: npm run build
       - name: GitHub Pages çıktı kontrolü
         run: node scripts/check-pages-output.mjs
+      - name: Görsel kabul için statik derleme çıktısını kaydet
+        uses: actions/upload-artifact@v4
+        with:
+          name: astro-demo-preview
+          path: dist/
+          retention-days: 3
