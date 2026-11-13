@@ -1,0 +1,12 @@
+---
+import Main from '../layouts/Main.astro';
+import {publicUrl} from '../lib/paths';
+---
+<Main title="Sayfa bulunamadı | Taş Fırın" description="Aradığınız sayfa bulunamadı." noindex={true}>
+  <main class="not-found">
+    <span aria-hidden="true" class="not-found-code">404</span>
+    <h1>Bu sayfa bulunamadı.</h1>
+    <p>Menümüze dönebilir, ürünleri ve örnek sipariş akışını inceleyebilirsiniz.</p>
+    <a class="primary-button" href={publicUrl("/")}>Ana sayfaya dön</a>
+  </main>
+</Main>
