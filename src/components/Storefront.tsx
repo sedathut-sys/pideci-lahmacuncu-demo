@@ -116,7 +116,7 @@ export default function Storefront() {
   const configuredUnitPrice = selected ? (selected.variants?.[variantIdx]?.price ?? selected.price) + (selected.extras??[]).filter(item=>chosenExtras.includes(item.label)).reduce((sum,item)=>sum+item.price,0) : 0;
 
   useEffect(()=>{setMessagePreview('');setCopyResult('');},[cart,delivery,customer,address,note]);
-  // Sepet bildirimi kısa süre görünür; kullanıcı isterse hemen sepeti açabilir.
+  // Sepet bildirimi kısa süre görünür, kullanıcı isterse hemen sepeti açabilir.
   useEffect(() => {
     if (!addedProduct) return;
     const id = window.setTimeout(() => setAddedProduct(''), 3800);
@@ -201,7 +201,7 @@ export default function Storefront() {
           </div>
           <div className="hero-visual">
             <div className="hero-orbit" aria-hidden="true"/>
-            <img src={publicUrl("/images/hero-pide.svg")} alt="Taş fırından taze pide ve lahmacun illüstrasyonu" className="hero-image" width="650" height="540" loading="eager" decoding="async" fetchPriority="high"/>
+            <img src={publicUrl("/images/hero-pide.svg")} alt="Kıymalı pide ve lahmacun sunumu" className="hero-image" width="650" height="540" loading="eager" decoding="async" fetchPriority="high"/>
             <div className="hero-sticker"><span>✦</span><b>USTA İŞİ</b><small>HER LOKMADA</small></div>
             <div className="hero-floating"><span className="flame">♨</span><span><strong>Taş fırın lezzeti</strong><small>Özenle hazırlanan yemekler</small></span></div>
           </div>
@@ -263,14 +263,14 @@ export default function Storefront() {
             <div className="checkout-fields"><h3>Teslimat bilgileri</h3><div className="delivery-switch"><button disabled={!settings.deliveryAvailable} type="button" aria-pressed={delivery==='delivery'} className={delivery==='delivery'?'active':''} onClick={()=>{setDelivery('delivery');setError('');}}>🚲 Paket servis</button><button disabled={!settings.pickupAvailable} type="button" aria-pressed={delivery==='pickup'} className={delivery==='pickup'?'active':''} onClick={()=>{setDelivery('pickup');setError('');}}>🏪 Gel-al</button></div><label>Adınız <span>*</span><input type="text" maxLength={80} value={customer} onChange={e=>{setCustomer(e.target.value);setError('');}} placeholder="Adınızı yazın" autoComplete="name"/></label>{delivery==='delivery'&&<label>Teslimat adresi <span>*</span><textarea rows={2} maxLength={400} value={address} onChange={e=>{setAddress(e.target.value);setError('');}} placeholder="Mahalle, sokak, bina, daire..." autoComplete="street-address"/></label>}<label>Sipariş notu <small>(isteğe bağlı)</small><textarea rows={2} maxLength={300} value={note} onChange={e=>{setNote(e.target.value);setError('');}} placeholder="Kapı zili, özel istekler..."/></label></div>
           </>}
         </div>
-        <div className="cart-checkout"><div className="cart-total"><span>Ürün toplamı</span><strong>{money(total)}</strong></div><p className="cart-hint">Varsa servis ücreti işletme tarafından bildirilir. WhatsApp'ta <b>mesajı sen göndermeden</b> sipariş oluşmaz.</p>
-        {!LIVE&&<p className="warning-inline">⚠ SATIŞ DEMOSU: Gerçek işletme hattına mesaj gönderilmez. Hazır metni görüntüleyebilir ve kopyalayabilirsiniz.</p>}
+        <div className="cart-checkout"><div className="cart-total"><span>Ürün toplamı</span><strong>{money(total)}</strong></div><p className="cart-hint">Varsa teslimat ücreti ayrıca bildirilir. Siparişiniz, mesajı WhatsApp'ta gönderip işletmeden onay aldığınızda kesinleşir.</p>
+        {!LIVE&&<p className="warning-inline">⚠ Demo: Gerçek sipariş gönderilmez; mesajı yalnızca görüntüleyip kopyalayabilirsiniz.</p>}
         {LIVE&&!settings.whatsappNumber&&<p className="warning-inline">⚠ WhatsApp sipariş hattı henüz ayarlanmamış.</p>}
         {error&&<p className="form-error" role="alert">{error}</p>}
         {copyResult&&<p className="copy-success" role="status">{copyResult}</p>}
         {messagePreview&&<div className="message-preview" role="status"><strong>Hazırlanan sipariş mesajı</strong><pre>{messagePreview}</pre></div>}
-        <button type="button" className="whatsapp-button" disabled={cart.length===0 || !settings.orderingEnabled} onClick={sendWhatsApp}><Icon name="whatsapp" size={21}/>{settings.orderingEnabled?(LIVE?'3 / 3 · WhatsApp ile devam et':'3 / 3 · Sipariş mesajını gör'):'Sipariş alımı kapalı'} <Icon name="arrow" size={17}/></button>
-        <button type="button" className="copy-button" disabled={cart.length===0} onClick={copyMessage}>Sipariş metnini kopyala</button>
+        <button type="button" className="whatsapp-button" disabled={cart.length===0 || !settings.orderingEnabled} onClick={!LIVE&&messagePreview?copyMessage:sendWhatsApp}><Icon name="whatsapp" size={21}/>{settings.orderingEnabled?(LIVE?'WhatsApp ile siparişi tamamla':messagePreview?'Sipariş metnini kopyala':'Sipariş mesajını görüntüle'):'Sipariş alımı kapalı'} <Icon name="arrow" size={17}/></button>
+        {!messagePreview&&<button type="button" className="copy-button" disabled={cart.length===0} onClick={copyMessage}>Sipariş metnini kopyala</button>}
         </div>
       </aside>
     </div>}
