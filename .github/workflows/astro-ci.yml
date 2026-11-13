@@ -1,0 +1,34 @@
+name: Astro Proje Derleme ve Test
+on:
+  push:
+    branches: [main, astro-stage55-source]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  astro-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bağımlılıkları kur
+        run: npm install --no-audit --no-fund
+      - name: Sipariş ve panel testleri
+        run: npm test
+      - name: Kalite kontrolleri
+        run: npm run quality
+      - name: Astro statik demo derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: https://sedathut-sys.github.io/pideci-lahmacuncu-demo/
+        run: npm run build
+      - name: GitHub Pages çıktı kontrolü
+        run: node scripts/check-pages-output.mjs

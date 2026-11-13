@@ -1,0 +1,164 @@
+{
+  "settings": {
+    "name": "Taş Fırın",
+    "tagline": "Mahallenin fırınından, sıcacık sofranıza.",
+    "address": "ÖRNEK ADRES — gerçek işletme bilgisi değildir",
+    "hours": "11.00 – 22.00 (örnek)",
+    "phoneDisplay": "Telefon eklenmedi",
+    "whatsappNumber": "",
+    "deliveryAvailable": true,
+    "pickupAvailable": true,
+    "minimumOrder": 0,
+    "orderingEnabled": true,
+    "notice": "Bu site bir tanıtım demosudur; fiyatlar örnektir.",
+    "categories": [
+      "Pide",
+      "Lahmacun",
+      "Yan Ürün",
+      "İçecek"
+    ]
+  },
+  "products": [
+    {
+      "id": "pide-kiymali",
+      "name": "Kıymalı Pide",
+      "category": "Pide",
+      "description": "İncecik hamur, bol baharatlı kıyma ve taş fırın lezzeti.",
+      "price": 215,
+      "image": "/images/pide-kiymali.svg",
+      "badge": "Çok sevilen",
+      "available": true,
+      "variants": [
+        {
+          "label": "Standart",
+          "price": 215
+        },
+        {
+          "label": "1,5 porsiyon",
+          "price": 310
+        }
+      ],
+      "extras": [
+        {
+          "label": "Ekstra kaşar",
+          "price": 35
+        },
+        {
+          "label": "Yumurta",
+          "price": 25
+        }
+      ]
+    },
+    {
+      "id": "lahmacun",
+      "name": "Antep Usulü Lahmacun",
+      "category": "Lahmacun",
+      "description": "İnce çıtır hamur, dengeli baharat ve bol yeşillik.",
+      "price": 115,
+      "image": "/images/lahmacun.svg",
+      "badge": "Favori",
+      "available": true,
+      "variants": [],
+      "extras": [
+        {
+          "label": "Ekstra yeşillik",
+          "price": 0
+        },
+        {
+          "label": "Acılı",
+          "price": 0
+        }
+      ]
+    },
+    {
+      "id": "pide-kasarli",
+      "name": "Kaşarlı Pide",
+      "category": "Pide",
+      "description": "Uzayan kaşar peyniriyle fırından yeni çıkmış lezzet.",
+      "price": 205,
+      "image": "/images/pide-kasarli.svg",
+      "badge": "",
+      "available": true,
+      "variants": [
+        {
+          "label": "Standart",
+          "price": 205
+        },
+        {
+          "label": "1,5 porsiyon",
+          "price": 295
+        }
+      ],
+      "extras": []
+    },
+    {
+      "id": "pide-karisik",
+      "name": "Karışık Pide",
+      "category": "Pide",
+      "description": "Sucuk, kaşar, kavurma ve sebzelerin nefis uyumu.",
+      "price": 285,
+      "image": "/images/pide-karisik.svg",
+      "badge": "Ustanın seçimi",
+      "available": true,
+      "variants": [],
+      "extras": [
+        {
+          "label": "Ekstra kaşar",
+          "price": 35
+        },
+        {
+          "label": "Yumurta",
+          "price": 25
+        }
+      ]
+    },
+    {
+      "id": "salata",
+      "name": "Çoban Salata",
+      "category": "Yan Ürün",
+      "description": "Mevsimin taze sebzeleri, limon ve zeytinyağı.",
+      "price": 95,
+      "image": "/images/salata.svg",
+      "badge": "",
+      "available": true,
+      "variants": [],
+      "extras": []
+    },
+    {
+      "id": "kunefe",
+      "name": "Künefe",
+      "category": "Yan Ürün",
+      "description": "Çıtır kadayıf, erimiş peynir ve tam kararında şerbet.",
+      "price": 160,
+      "image": "/images/kunefe.svg",
+      "badge": "",
+      "available": true,
+      "variants": [],
+      "extras": []
+    },
+    {
+      "id": "ayran",
+      "name": "Ayran",
+      "category": "İçecek",
+      "description": "Soğuk, ferahlatıcı ve yemeklerin vazgeçilmezi.",
+      "price": 40,
+      "image": "/images/ayran.svg",
+      "badge": "",
+      "available": true,
+      "variants": [],
+      "extras": []
+    },
+    {
+      "id": "soda",
+      "name": "Maden Suyu",
+      "category": "İçecek",
+      "description": "Serinleten sade maden suyu.",
+      "price": 35,
+      "image": "/images/soda.svg",
+      "badge": "",
+      "available": true,
+      "variants": [],
+      "extras": []
+    }
+  ]
+}

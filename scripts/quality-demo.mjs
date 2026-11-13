@@ -1,0 +1,20 @@
+/** Demo yayınından önce kaynak güvenlik ve alt yol denetimi. */
+import {readFileSync,existsSync} from 'node:fs';
+import path from 'node:path';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const cfg=read('astro.config.mjs');const paths=read('src/lib/paths.ts');
+const layout=read('src/layouts/Main.astro');const store=read('src/components/Storefront.tsx');
+const panel=read('src/components/AdminPanel.tsx');
+const robots=read('src/pages/robots.txt.ts');
+const wf=read('.github/workflows/pages.yml')+'\n'+read('.github/workflows/astro-ci.yml');
+let bad=0;const check=(name,ok)=>{console.log((ok?'PASS ':'FAIL ')+name);if(!ok)bad++;};
+check('Pages base yolu',cfg.includes("base: '/pideci-lahmacuncu-demo'"));
+check('Ortak görsel yolları',paths.includes('BASE_URL') && store.includes('publicUrl(p.image)') && panel.includes('publicUrl(p.image)'));
+check('Panel bağlantısı alt klasörde',store.includes('publicUrl("/panel/")'));
+check('Demo noindex',layout.includes("'noindex, nofollow'") && robots.includes('Disallow: /'));
+check('Demo moduna sabitleme', wf.includes('PUBLIC_DATA_MODE: demo'));
+check('Sadece depo main eylemi',wf.includes('branches: [main]'));
+check('Önce test sonra yayın',wf.includes('run: npm test') && wf.includes('run: npm run build'));
+check('Backend ve secret yok',!existsSync(new URL('../worker',import.meta.url)) && !existsSync(new URL('../.dev.vars',import.meta.url)));
+check('Ürün görselleri mevcut',existsSync(new URL('../public/images/hero-pide.svg',import.meta.url)));
+if(bad)process.exitCode=1;
