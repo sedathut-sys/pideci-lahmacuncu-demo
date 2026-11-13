@@ -37,7 +37,7 @@ test('Sipariş hesaplaması ve demo güvenliği korunur',()=>{
   assert.match(storefront, /validateCheckout\(/);
   assert.match(storefront, /refreshCart\(/);
   assert.match(storefront, /if\(!LIVE\) \{setMessagePreview\(message\)/);
-  assert.match(storefront, /3 \/ 3 · Sipariş mesajını gör/);
+  assert.match(storefront, /Sipariş mesajını görüntüle/);
 });
 test('Daha az tekrarlanan CTA ve üç aşamalı bilgi akışı',()=>{
   assert.match(storefront, /Üç adımda/);
