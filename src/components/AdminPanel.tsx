@@ -245,7 +245,11 @@ export default function AdminPanel() {
             {matches.map(p=><article className="admin-mobile-product" key={p.id}>
               <div className="admin-mobile-product-top">
                 <img src={publicUrl(p.image)} alt="" loading="lazy" width="92" height="92"/>
-                <div className="admin-mobile-product-info"><small>{p.category}</small><h3>{p.name}</h3><strong>{money(p.variants?.[0]?.price??p.price)}</strong></div>
+                <div className="admin-mobile-product-info">
+                  <small>{p.category}</small>
+                  <h3>{p.name}</h3>
+                  <strong>{money(p.variants?.[0]?.price??p.price)}</strong>
+                </div>
               </div>
               <div className="admin-mobile-product-actions" role="group" aria-label={`${p.name} yönetimi`}>
                 <button disabled={busy} className={`status-pill ${p.available?'on':'off'}`} type="button" onClick={()=>toggleProduct(p)} aria-label={`${p.name}: ${p.available?'görünür, gizlemek için tıkla':'gizli, göstermek için tıkla'}`}>{p.available?'● Görünür':'○ Gizli'}</button>
@@ -278,9 +282,9 @@ export default function AdminPanel() {
       </section>}
     </main>
     {editing&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setEditing(null);}}><section className="admin-dialog admin-dialog-large" role="dialog" aria-modal="true" aria-label={isNew?'Ürün oluştur':'Ürün düzenle'}><div className="admin-dialog-top"><div><p className="overline">MENÜ YÖNETİMİ</p><h2>{isNew?'Yeni ürün':'Ürün düzenle'}</h2></div><button className="close-icon" aria-label="Kapat" onClick={()=>setEditing(null)} type="button">✕</button></div>
-      <div className="admin-form"><label>Ürün adı *<input autoFocus maxLength={80} value={editing.name} onChange={e=>setEditing({...editing,name:e.target.value})} placeholder="Kıymalı Pide"/></label>
+      <div className="admin-form"><p className="admin-draft-hint">Değişiklikler yalnızca <b>Ürünü kaydet</b> düğmesine bastığınızda uygulanır.</p><label>Ürün adı *<input autoFocus maxLength={80} value={editing.name} onChange={e=>setEditing({...editing,name:e.target.value})} placeholder="Kıymalı Pide"/></label>
         <label>Kategori<select value={editing.category} onChange={e=>setEditing({...editing,category:e.target.value as Product['category']})}>{settings.categories.map(cat=><option key={cat}>{cat}</option>)}</select></label>
-        <label>Temel fiyat (₺) *<input type="number" min="0" step="0.01" max="1000000" value={editing.price} onChange={e=>setEditing({...editing,price:Number(e.target.value)})}/></label>
+        <label>Temel fiyat (₺) *<input type="number" min="0" step="0.01" max="1000000" value={editing.price} onChange={e=>setEditing({...editing,price:Number(e.target.value)})}/>{Boolean(editing.variants?.length)&&<small className="admin-price-help">Bu üründe porsiyon fiyatı geçerli. Menüde görünen fiyatı değiştirmek için aşağıdaki <b>Porsiyon / boy seçenekleri</b> bölümünü düzenleyin.</small>}</label>
         <label>Etiket / rozet<input value={editing.badge||''} maxLength={35} onChange={e=>setEditing({...editing,badge:e.target.value})} placeholder="Çok sevilen"/></label>
         <label>Açıklama<textarea rows={3} maxLength={300} value={editing.description} onChange={e=>setEditing({...editing,description:e.target.value})}/></label>
         <label>Fotoğraf seç<select value={IMAGES.includes(editing.image)?editing.image:'custom'} onChange={e=>setEditing({...editing,image:e.target.value})}>{!IMAGES.includes(editing.image)&&<option value="custom">Yüklenen görsel</option>}{IMAGES.map(img=><option key={img} value={img}>{img.split('/').pop()}</option>)}</select></label>
