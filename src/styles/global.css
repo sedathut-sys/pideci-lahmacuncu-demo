@@ -97,3 +97,54 @@
 .not-found p{color:#665d55;max-width:470px;line-height:1.6;margin:0 0 12px}
 :where(.config-modal,.cart-panel):focus{outline:none}
 @media (prefers-contrast:more){:where(button,a,input,textarea,select):focus-visible{outline:4px solid #111;outline-offset:3px}}
+
+/* AŞAMA 5.7: Mobil panelde kaydırılabilir tablo yerine tam erişimli ürün kartları */
+.admin-mobile-cards{display:none}
+@media(max-width:800px){
+  .admin-table-wrap{display:none}
+  .admin-mobile-cards{display:grid;gap:12px;padding:14px;background:#faf7f2}
+  .admin-mobile-product{background:#fff;border:1px solid #e9e0d7;border-radius:17px;padding:13px;box-shadow:0 6px 20px #3f2c180b;min-width:0}
+  .admin-mobile-product-top{display:flex;align-items:center;gap:13px;min-width:0}
+  .admin-mobile-product-top>img{width:84px;height:84px;flex:0 0 84px;object-fit:cover;background:#f4eee6;border-radius:13px}
+  .admin-mobile-product-info{min-width:0;flex:1}
+  .admin-mobile-product-info small{display:block;color:#94694c;font-size:12px;font-weight:700;margin-bottom:5px}
+  .admin-mobile-product-info h3{font-size:16px;line-height:1.28;margin:0 0 7px;overflow-wrap:anywhere;color:#28231f}
+  .admin-mobile-product-info strong{font-size:18px;color:#ad442b}
+  .admin-mobile-product-actions{display:grid;grid-template-columns:1.2fr 1fr .75fr;gap:8px;padding-top:12px;margin-top:12px;border-top:1px solid #eee8e1}
+  .admin-mobile-product-actions button{min-width:0;min-height:46px;margin:0!important;border-radius:11px;font-size:13px;font-weight:750;text-decoration:none;display:flex;justify-content:center;align-items:center;padding:8px 5px;cursor:pointer}
+  .admin-mobile-product-actions .edit-button{border:1px solid #cdb89f;background:#fff8ee;color:#70482a}
+  .admin-mobile-product-actions .admin-danger-btn{border:1px solid #f1d6d0;background:#fff7f5;color:#9a332d}
+  .admin-mobile-product-actions .status-pill{white-space:normal;font-size:12px}
+  .admin-main .admin-section-top{gap:14px;flex-wrap:wrap}
+  .admin-main .admin-section-top .admin-create{min-height:46px;font-size:13px;padding:10px 16px}
+  .admin-toolbar input,.admin-toolbar button{min-height:44px;font-size:13px}
+  .admin-side-link{min-height:44px}
+}
+/* AŞAMA 5.7: Mobil vitrinde tek sütunla okunabilir ürünler ve güçlü dokunma hedefleri */
+@media(max-width:520px){
+  .products-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+  .product-card{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr);align-items:stretch;overflow:hidden;min-height:170px;border-radius:16px}
+  .product-image-wrap{height:100%!important;min-height:171px;border-radius:0}
+  .product-image-wrap img{width:100%;height:100%;object-fit:cover}
+  .product-info{padding:13px 13px 12px;min-height:0!important;display:flex;flex-direction:column}
+  .product-info h3{font-size:clamp(15px,4.2vw,18px);line-height:1.28}
+  .product-info p{font-size:12px;line-height:1.48;min-height:0!important;margin-top:6px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  .product-footer{margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}
+  .product-price{font-size:17px;line-height:1.1}
+  .product-price small{font-size:10px}
+  .add-button{min-height:46px;min-width:76px;padding:9px 11px;font-size:13px;border-radius:10px;display:inline-flex;gap:5px;justify-content:center;align-items:center}
+  .add-button span{display:inline!important}
+  .filter{min-height:46px;font-size:13px}
+  .search-box input{min-height:46px;font-size:15px}
+  .mobile-menu,.cart-pill,.qty-control button,.close-icon{min-width:44px;min-height:44px}
+  .hero-visual .hero-image{border-radius:23px;object-fit:cover;width:100%;height:auto;max-height:340px;box-shadow:0 17px 45px #3a251a30}
+}
+@media(max-width:360px){
+  .products-grid{gap:12px}
+  .product-card{grid-template-columns:35% minmax(0,1fr)}
+  .product-image-wrap{min-height:182px}
+  .product-info{padding:12px 10px}
+  .product-price{font-size:16px}
+  .add-button{min-width:70px;padding:9px}
+}
+@media(min-width:521px){.hero-visual .hero-image{object-fit:cover;border-radius:24px;max-width:100%;height:auto;max-height:500px;box-shadow:0 22px 60px #3a251a33}}

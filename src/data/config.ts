@@ -37,3 +37,13 @@ export function writeDemoSettings(settings:SiteSettings) {
   window.localStorage.setItem(SITE_KEY,JSON.stringify(settings));
   window.dispatchEvent(new Event(SITE_CHANGED));
 }
+
+/** Sektör şablonlarında marka adını tek merkezde kullanırız. */
+export function brandInitials(name:string):string {
+  const words=name.trim().split(/\s+/).filter(Boolean);
+  if(!words.length)return 'İŞ';
+  return (words.length===1?words[0].slice(0,2):words.slice(0,2).map(w=>w[0]).join('')).toLocaleUpperCase('tr-TR');
+}
+export function brandSubtitle(name:string):string {
+  return name.trim().toLocaleLowerCase('tr-TR')==='taş fırın' ? 'PİDE & LAHMACUN' : 'MENÜ & SİPARİŞ';
+}

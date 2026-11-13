@@ -1,7 +1,7 @@
 import {publicUrl} from '../lib/paths';
 import { useEffect, useMemo, useState } from 'react';
 import { initialProducts,readDemoProducts,writeDemoProducts,type Product, type ProductExtra, type ProductVariant } from '../data/products';
-import { site,readDemoSettings,writeDemoSettings,type SiteSettings } from '../data/config';
+import { site,brandInitials,readDemoSettings,writeDemoSettings,type SiteSettings } from '../data/config';
 import {addCategory,removeCategory,validateCategories,assertCategoriesUsed} from '../lib/admin-core.mjs';
 
 const LIVE = import.meta.env.PUBLIC_DATA_MODE === 'live';
@@ -216,7 +216,7 @@ export default function AdminPanel() {
   if(status==='loading')return <div className="admin-login-page"><div className="admin-login-box">İşletmeci paneli yükleniyor…</div></div>;
   if(status==='login')return <div className="admin-login-page"><form className="admin-login-box" onSubmit={login}>
     <a className="admin-login-back" href={publicUrl("/")}>← Siteye dön</a>
-    <div className="brand-mark">T<span>F</span></div>
+    <div className="brand-mark">{brandInitials(site.name).slice(0,1)}<span>{brandInitials(site.name).slice(1)}</span></div>
     <p className="overline">İŞLETME YÖNETİMİ</p><h1>Panel girişi</h1><p>Ürünlerinizi, menünüzü ve iletişim bilgilerinizi güvenle yönetin.</p>
     <label>Kullanıcı adı<input autoComplete="username" value={username} onChange={e=>setUsername(e.target.value)} required /></label>
     <label>Şifre<input autoComplete="current-password" type="password" value={password} onChange={e=>setPassword(e.target.value)} required /></label>
@@ -225,7 +225,7 @@ export default function AdminPanel() {
   </form></div>;
 
   return <div className="admin-app">
-    <aside className="admin-sidebar"><a href={publicUrl("/")} className="admin-logo"><span className="brand-mark">T<span>F</span></span><span>{settings.name.toUpperCase()}<small>İŞLETME YÖNETİMİ</small></span></a>
+    <aside className="admin-sidebar"><a href={publicUrl("/")} className="admin-logo"><span className="brand-mark">{brandInitials(settings.name).slice(0,1)}<span>{brandInitials(settings.name).slice(1)}</span></span><span>{settings.name.toUpperCase()}<small>İŞLETME YÖNETİMİ</small></span></a>
       <div className="admin-side-label">YÖNETİM</div>
       <button type="button" className={`admin-side-link ${tab==='products'?'active':''}`} onClick={()=>setTab('products')}>▦ <span>Ürünler ve menü</span></button>
       <button type="button" className={`admin-side-link ${tab==='categories'?'active':''}`} onClick={()=>setTab('categories')}>▤ <span>Kategoriler</span></button>
@@ -241,6 +241,20 @@ export default function AdminPanel() {
         <section className="admin-section" id="urunler"><div className="admin-section-top"><div><h2>Menüdeki ürünler <span>{products.length}</span></h2><p>Ürün ekle, sil, fiyat veya porsiyon seçeneklerini değiştir.</p></div><button className="admin-create" type="button" onClick={()=>{setIsNew(true);setEditing(emptyProduct(settings.categories[0]||'Pide'));}}>＋ Yeni ürün</button></div>
           <div className="admin-toolbar">{!LIVE&&<button type="button" onClick={downloadDemoBackup}>↓ Demo yedeğini indir</button>}{LIVE&&<button type="button" disabled={busy} onClick={downloadLiveBackup}>↓ İşletme yedeği (JSON)</button>}<input type="search" value={filter} onChange={e=>setFilter(e.target.value)} placeholder="Ürün veya kategori ara…" aria-label="Ürün ara"/>{!LIVE&&<button type="button" onClick={()=>{if(confirm('Demo menüsünü sıfırlamak istiyor musun?')){writeDemoProducts(initialProducts);setProducts(initialProducts);info('Örnek menü sıfırlandı.');}}}>↺ Demoyu sıfırla</button>}</div>
           <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Ürün</th><th>Kategori</th><th>Başlangıç fiyatı</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody>{matches.map(p=><tr key={p.id}><td><div className="admin-product"><img src={publicUrl(p.image)} alt=""/><div><strong>{p.name}</strong><small>{p.description}</small></div></div></td><td>{p.category}</td><td className="admin-price">{money(p.variants?.[0]?.price??p.price)}</td><td><button disabled={busy} className={`status-pill ${p.available?'on':'off'}`} type="button" onClick={()=>toggleProduct(p)}>{p.available?'● Görünür':'○ Gizli'}</button></td><td className="admin-actions-cell"><button className="edit-button" type="button" onClick={()=>{setIsNew(false);setEditing(structuredClone(p));}}>Düzenle</button><button className="admin-danger-btn" type="button" disabled={busy} onClick={()=>deleteProduct(p)}>Sil</button></td></tr>)}</tbody></table>{matches.length===0&&<p className="admin-no-results">Ürün bulunamadı.</p>}</div>
+          <div className="admin-mobile-cards" aria-label="Ürünleri telefondan yönet">
+            {matches.map(p=><article className="admin-mobile-product" key={p.id}>
+              <div className="admin-mobile-product-top">
+                <img src={publicUrl(p.image)} alt="" loading="lazy" width="92" height="92"/>
+                <div className="admin-mobile-product-info"><small>{p.category}</small><h3>{p.name}</h3><strong>{money(p.variants?.[0]?.price??p.price)}</strong></div>
+              </div>
+              <div className="admin-mobile-product-actions" role="group" aria-label={`${p.name} yönetimi`}>
+                <button disabled={busy} className={`status-pill ${p.available?'on':'off'}`} type="button" onClick={()=>toggleProduct(p)} aria-label={`${p.name}: ${p.available?'görünür, gizlemek için tıkla':'gizli, göstermek için tıkla'}`}>{p.available?'● Görünür':'○ Gizli'}</button>
+                <button className="edit-button" type="button" onClick={()=>{setIsNew(false);setEditing(structuredClone(p));}} aria-label={`${p.name} düzenle`}>Düzenle</button>
+                <button className="admin-danger-btn" type="button" disabled={busy} onClick={()=>deleteProduct(p)} aria-label={`${p.name} sil`}>Sil</button>
+              </div>
+            </article>)}
+            {matches.length===0&&<p className="admin-no-results">Ürün bulunamadı.</p>}
+          </div>
         </section>
       </>:tab==='categories'?<section className="admin-section admin-category-section">
         <div className="admin-section-top"><div><h2>Kategori yönetimi <span>{settings.categories?.length||0}</span></h2><p>Menüdeki başlıkları düzenle. Ürünü olan kategoriyi silmeden önce ürünleri taşımalısın.</p></div></div>
