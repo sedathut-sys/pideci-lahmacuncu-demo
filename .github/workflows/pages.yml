@@ -1,59 +1,52 @@
-name: Taş Fırın Demo — GitHub Pages
+name: Pideci-Lahmacuncu Demo — Test ve GitHub Pages
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: true
-
 jobs:
-  verify-and-package:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Kaynak kodu al
-        uses: actions/checkout@v4
-      - name: HTML dosyalarını doğrula
-        run: |
-          python3 - <<'PY'
-          from html.parser import HTMLParser
-          from pathlib import Path
-          for name in ("index.html", "PANEL-DEMO.html"):
-              text = Path(name).read_text(encoding="utf-8")
-              assert "<!doctype html>" in text.lower(), name
-              assert 'name="viewport"' in text, name
-              assert 'name="robots"' in text, name
-              assert len(text) > 10000, f"Dosya eksik: {name}"
-              HTMLParser().feed(text)
-              print(f"{name}: HTML okunabilir, {len(text)} karakter")
-          assert 'href="PANEL-DEMO.html"' in Path("index.html").read_text(encoding="utf-8")
-          print("Site ve panel bağlantısı: OK")
-          PY
-      - name: Yayın klasörünü hazırla
-        run: |
-          mkdir -p dist
-          cp index.html PANEL-DEMO.html dist/
-          touch dist/.nojekyll
-      - name: GitHub Pages'i yapılandır
+        uses: actions/checkout@v6
+      - name: Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bağımlılıkları yükle
+        run: npm install --no-audit --no-fund
+      - name: Sipariş ve panel çekirdek testleri
+        run: npm test
+      - name: Demo kaynak güvenlik ve alt-yol denetimi
+        run: npm run quality
+      - name: Demo Astro derlemesi
+        run: npm run build
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+      - name: Sayfa çıktısını doğrula
+        run: node scripts/check-pages-output.mjs
+      - name: GitHub Pages ayarları
         uses: actions/configure-pages@v5
-      - name: Yayın paketini hazırla
+      - name: Statik site dosyalarını yayın için yükle
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
-
   deploy:
-    needs: verify-and-package
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Siteyi yayınla
+      - name: GitHub Pages yayınla
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
