@@ -67,7 +67,7 @@ export function orderMessage({cart,customer,address,note='',delivery}) {
   return [
     'Merhaba, sipariş oluşturmak istiyorum.', '',
     ...rows,'',`*Ürün toplamı: ${money(totals(cart).subtotal)}*`,
-    'Servis ücreti varsa ve nihai tutar işletme tarafından onaylanır.','',
+    'Varsa teslimat ücreti ayrıca bildirilecektir.','',
     `Teslimat türü: ${delivery==='delivery'?'Paket servis':'Gel-al'}`,
     `Ad: ${normalize(customer,80)}`,
     ...(delivery==='delivery'?[`Adres: ${normalize(address,400)}`]:[]),
