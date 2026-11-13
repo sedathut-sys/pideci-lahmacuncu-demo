@@ -1,0 +1,59 @@
+name: Taş Fırın Demo — GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kaynak kodu al
+        uses: actions/checkout@v4
+      - name: HTML dosyalarını doğrula
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          for name in ("index.html", "PANEL-DEMO.html"):
+              text = Path(name).read_text(encoding="utf-8")
+              assert "<!doctype html>" in text.lower(), name
+              assert 'name="viewport"' in text, name
+              assert 'name="robots"' in text, name
+              assert len(text) > 10000, f"Dosya eksik: {name}"
+              HTMLParser().feed(text)
+              print(f"{name}: HTML okunabilir, {len(text)} karakter")
+          assert 'href="PANEL-DEMO.html"' in Path("index.html").read_text(encoding="utf-8")
+          print("Site ve panel bağlantısı: OK")
+          PY
+      - name: Yayın klasörünü hazırla
+        run: |
+          mkdir -p dist
+          cp index.html PANEL-DEMO.html dist/
+          touch dist/.nojekyll
+      - name: GitHub Pages'i yapılandır
+        uses: actions/configure-pages@v5
+      - name: Yayın paketini hazırla
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    needs: verify-and-package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Siteyi yayınla
+        id: deployment
+        uses: actions/deploy-pages@v4
