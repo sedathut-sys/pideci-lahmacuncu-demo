@@ -1,0 +1,7 @@
+---
+import Main from '../layouts/Main.astro';
+import AdminPanel from '../components/AdminPanel';
+---
+<Main title="İşletmeci Paneli | Taş Fırın" description="İşletme yönetimi" noindex={true}>
+  <AdminPanel client:load />
+</Main>
