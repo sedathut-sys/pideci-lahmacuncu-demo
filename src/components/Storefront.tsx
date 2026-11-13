@@ -34,6 +34,7 @@ export default function Storefront() {
   const [search, setSearch] = useState('');
   const [cart, setCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [addedProduct, setAddedProduct] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
   const [selected, setSelected] = useState<Product|null>(null);
   const [variantIdx, setVariantIdx] = useState(0);
@@ -115,6 +116,12 @@ export default function Storefront() {
   const configuredUnitPrice = selected ? (selected.variants?.[variantIdx]?.price ?? selected.price) + (selected.extras??[]).filter(item=>chosenExtras.includes(item.label)).reduce((sum,item)=>sum+item.price,0) : 0;
 
   useEffect(()=>{setMessagePreview('');setCopyResult('');},[cart,delivery,customer,address,note]);
+  // Sepet bildirimi kısa süre görünür; kullanıcı isterse hemen sepeti açabilir.
+  useEffect(() => {
+    if (!addedProduct) return;
+    const id = window.setTimeout(() => setAddedProduct(''), 3800);
+    return () => window.clearTimeout(id);
+  }, [addedProduct]);
   useEffect(()=>{if(!settings.deliveryAvailable && settings.pickupAvailable)setDelivery('pickup');else if(!settings.pickupAvailable && settings.deliveryAvailable)setDelivery('delivery');},[settings.deliveryAvailable,settings.pickupAvailable]);
 
   function openConfigurator(product:Product) {
@@ -124,7 +131,7 @@ export default function Storefront() {
     try {
       const line=buildCartLine(product,{variantIndex,extraLabels:extras,quantity});
       setCart(current=>addLine(current,line));
-      setSelected(null);setConfigError('');setCartOpen(true);
+      setSelected(null);setConfigError('');setAddedProduct(product.name);
     } catch(e) {setConfigError(e instanceof Error?e.message:'Ürün eklenemedi.');}
   }
   function quantityChange(key:string,delta:number) {
@@ -182,7 +189,7 @@ export default function Storefront() {
       </div>
     </header>
 
-    <main id="anasayfa">
+    <main id="anasayfa" className={cart.length ? "has-cart" : undefined}>
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-copy">
@@ -215,33 +222,43 @@ export default function Storefront() {
         {visible.length===0&&<div className="empty-products">{loadError?'':'Bu kategoride ürün bulunamadı. Başka bir kelime deneyin.'}</div>}
       </div></section>
 
-      <section className="how-section" id="nedenbiz"><div className="container how-grid"><div><p className="overline">SİPARİŞ VERMENİN EN KOLAY HALİ</p><h2>Üç adımda <em>sofranızda.</em></h2><p>Ne uygulama indirmeniz ne de üye olmanız gerekiyor. Lezzeti seçin, gerisini bize bırakın.</p><a className="text-link" href="#menu">Şimdi sipariş oluştur <Icon name="arrow" size={18}/></a></div><div className="how-steps"><div className="how-step"><span>01</span><div><h3>Lezzetini seç</h3><p>Menüden dilediğin ürünleri sepete ekle.</p></div></div><div className="how-step"><span>02</span><div><h3>Sepetini hazırla</h3><p>Adetleri belirle, teslimat bilgilerini yaz.</p></div></div><div className="how-step"><span>03</span><div><h3>WhatsApp'tan gönder</h3><p>Hazır mesajını işletmeye ilet, onayını bekle.</p></div></div></div></div></section>
+      <section className="how-section" id="nedenbiz"><div className="container how-grid"><div><p className="overline">KOLAY SİPARİŞ</p><h2>Üç adımda <em>hazır.</em></h2><p>Üyelik yok: ürününü seç, sepetini kontrol et, WhatsApp mesajını hazırla.</p></div><div className="how-steps"><div className="how-step"><span>01</span><div><h3>Lezzetini seç</h3><p>Menüden dilediğin ürünleri sepete ekle.</p></div></div><div className="how-step"><span>02</span><div><h3>Sepetini hazırla</h3><p>Adetleri belirle, teslimat bilgilerini yaz.</p></div></div><div className="how-step"><span>03</span><div><h3>WhatsApp'tan gönder</h3><p>Hazır mesajını işletmeye ilet, onayını bekle.</p></div></div></div></div></section>
 
-      <section className="cta-section"><div className="container"><div className="cta-panel"><div><p className="overline">CANINIZ PİDE Mİ ÇEKTİ?</p><h2>Bir mesajla<br/><em>sipariş verin.</em></h2><p>Sepetinizi hazırlayın, WhatsApp üzerinden bizimle iletişime geçin.</p><button className="white-button" type="button" onClick={()=>setCartOpen(true)}>Sepetimi aç <Icon name="arrow" size={19}/></button></div><img src={publicUrl("/images/lahmacun.svg")} alt="Çıtır lahmacun" width="420" height="340" loading="lazy" decoding="async"/></div></div></section>
+      <section className="cta-section"><div className="container"><div className="cta-panel"><div><p className="overline">CANINIZ PİDE Mİ ÇEKTİ?</p><h2>Bir mesajla<br/><em>sipariş verin.</em></h2><p>Menüden dilediğinizi seçin; siparişinizi tek sepetten tamamlayın.</p><a className="white-button" href="#menu">Menüye dön <Icon name="arrow" size={19}/></a></div><img src={publicUrl("/images/lahmacun.svg")} alt="Çıtır lahmacun" width="420" height="340" loading="lazy" decoding="async"/></div></div></section>
     </main>
 
     <footer id="iletisim" className="site-footer"><div className="container footer-main"><div><a className="brand brand-footer" href="#anasayfa"><span className="brand-mark">{brandInitials(settings.name).slice(0,1)}<span>{brandInitials(settings.name).slice(1)}</span></span><span className="brand-text">{settings.name.toLocaleUpperCase('tr-TR')} <small>{brandSubtitle(settings.name)}</small></span></a><p>{settings.tagline}</p>{!LIVE&&<div className="demo-disclaimer">SATIŞ DEMOSU · Gerçek işletme bilgisi veya sipariş hattı değildir.</div>}</div><div><h4>Hızlı bağlantılar</h4><a href="#anasayfa">Ana sayfa</a><a href="#menu">Menümüz</a><a href="#nedenbiz">Nasıl sipariş verilir?</a></div><div><h4>İletişim bilgileri</h4><span><Icon name="map" size={18}/> {settings.address}</span><span><Icon name="clock" size={18}/> {settings.hours}</span><span>WhatsApp: <strong>{settings.phoneDisplay}</strong></span></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} {settings.name}{LIVE?'':' · Örnek site şablonu.'}</span><a href={publicUrl("/panel/")}>{LIVE?'İşletmeci girişi':'İşletmeci paneli demosu'} ↗</a></div></footer>
 
-    <button type="button" className="floating-cart" onClick={()=>setCartOpen(true)} aria-label="Sepeti aç"><Icon name="bag" size={23}/>{cartQuantity(cart)>0&&<span>{cartQuantity(cart)}</span>}</button>
+    {cart.length > 0 && !selected && !cartOpen && <div className="mobile-cart-bar" aria-label="Sepet özeti">
+      <div className="mobile-cart-count"><span>{cartQuantity(cart)} ürün</span><strong>{money(total)}</strong></div>
+      <button type="button" onClick={()=>{setAddedProduct('');setCartOpen(true);}}><Icon name="bag" size={18}/> Sepeti Gör <Icon name="arrow" size={17}/></button>
+    </div>}
+    {addedProduct && !selected && !cartOpen && <div className="add-confirm-toast" role="status" aria-live="polite">
+      <span><Icon name="check" size={17}/> {addedProduct} sepete eklendi</span>
+      <button type="button" onClick={()=>{setAddedProduct('');setCartOpen(true);}}>Sepeti gör</button>
+    </div>}
 
-    {selected && <div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null);}}>
+    {selected && <div className="modal-backdrop product-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null);}}>
       <div className="config-modal" tabIndex={-1} role="dialog" aria-modal="true" aria-label={`${selected.name} seçenekleri`}>
         <button type="button" className="close-icon" onClick={()=>setSelected(null)} aria-label="Ürün seçeneklerini kapat"><Icon name="close"/></button>
-        <div className="config-head"><img src={publicUrl(selected.image)} alt=""/><div><p className="overline">SİPARİŞİ KİŞİSELLEŞTİR</p><h3>{selected.name}</h3><p>{selected.description}</p></div></div>
+        <div className="config-options-scroll"><div className="config-head"><img src={publicUrl(selected.image)} alt=""/><div><p className="overline">SİPARİŞİ KİŞİSELLEŞTİR</p><h3>{selected.name}</h3><p>{selected.description}</p></div></div>
         {!!selected.variants?.length && <fieldset className="choices"><legend>Porsiyon / boy seçimi</legend>{selected.variants.map((variant,i)=><label key={`${i}-${variant.label}`} className="choice-row"><input name="variant" type="radio" checked={variantIdx===i} onChange={()=>setVariantIdx(i)}/><span>{variant.label}</span><strong>{money(variant.price)}</strong></label>)}</fieldset>}
         {!!selected.extras?.length && <fieldset className="choices"><legend>Ek malzemeler ve tercihlerin</legend><p className="option-helper">Birden fazla tercih seçebilirsiniz. Ücretsiz seçenekler toplama eklenmez.</p>{selected.extras.map((extra,i)=><label key={`${i}-${extra.label}`} className="choice-row"><input type="checkbox" checked={chosenExtras.includes(extra.label)} onChange={e=>setChosenExtras(current=>e.target.checked?[...current,extra.label]:current.filter(label=>label!==extra.label))}/><span>{extra.label}</span><strong>{extra.price?`+${money(extra.price)}`:'Ücretsiz'}</strong></label>)}</fieldset>}
-        <div className="config-bottom"><div><b>Adet</b><span className="option-helper">En fazla {MAX_LINE_QUANTITY} adet</span></div><div className="qty-control quantity-large"><button type="button" aria-label="Ürün adetini azalt" disabled={configQty<=1} onClick={()=>setConfigQty(count=>Math.max(1,count-1))}><Icon name="minus" size={17}/></button><span>{configQty}</span><button type="button" aria-label="Ürün adetini artır" disabled={configQty>=MAX_LINE_QUANTITY} onClick={()=>setConfigQty(count=>Math.min(MAX_LINE_QUANTITY,count+1))}><Icon name="plus" size={17}/></button></div></div>
+        </div>
+        <div className="config-sticky-actions"><div className="config-bottom"><div><b>Adet</b><span className="option-helper">En fazla {MAX_LINE_QUANTITY} adet</span></div><div className="qty-control quantity-large"><button type="button" aria-label="Ürün adetini azalt" disabled={configQty<=1} onClick={()=>setConfigQty(count=>Math.max(1,count-1))}><Icon name="minus" size={17}/></button><span>{configQty}</span><button type="button" aria-label="Ürün adetini artır" disabled={configQty>=MAX_LINE_QUANTITY} onClick={()=>setConfigQty(count=>Math.min(MAX_LINE_QUANTITY,count+1))}><Icon name="plus" size={17}/></button></div></div>
         <div className="option-summary"><span>Birim fiyat: {money(configuredUnitPrice)}</span><strong>Toplam: {money(configuredUnitPrice*configQty)}</strong></div>
         {configError && <p className="form-error" role="alert">{configError}</p>}
         <button type="button" className="primary-button full-button" onClick={()=>addToCart(selected,variantIdx,chosenExtras,configQty)}><Icon name="bag"/> Sepete ekle · {money(configuredUnitPrice*configQty)}</button>
+        </div>
       </div>
     </div>}
 
     {cartOpen && <div className="modal-backdrop cart-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setCartOpen(false);}}>
       <aside className="cart-panel" tabIndex={-1} role="dialog" aria-modal="true" aria-label="Sepetim">
-        <div className="cart-header"><div><p className="overline">SİPARİŞİNİZİ HAZIRLAYIN</p><h2>Sepetim <span>({cartQuantity(cart)})</span></h2></div><button className="close-icon" aria-label="Sepeti kapat" type="button" onClick={()=>setCartOpen(false)}><Icon name="close"/></button></div>
+        <div className="cart-header"><div><p className="overline">2 / 3 · SEPET VE TESLİMAT</p><h2>Sepetim <span>({cartQuantity(cart)})</span></h2></div><button className="close-icon" aria-label="Sepeti kapat" type="button" onClick={()=>setCartOpen(false)}><Icon name="close"/></button></div>
         <div className="cart-scroll">
           {cart.length===0?<div className="cart-empty"><div>🛍️</div><h3>Sepetiniz henüz boş</h3><p>Menüden lezzetleri seçerek başlayın.</p><button className="outline-button" type="button" onClick={()=>setCartOpen(false)}>Menüye dön</button></div>:<>
+            <a className="cart-continue-link" href="#menu" onClick={()=>{setCartOpen(false);setAddedProduct('');}}><Icon name="plus" size={18}/> Menüden başka ürün ekle</a>
             <div className="cart-lines">{cart.map(line=><div className="cart-line" key={line.key}><div className="cart-line-main"><h4>{line.name}</h4>{line.options&&<p>{line.options}</p>}<small>{money(line.unitPrice)} / adet</small><b>{money(line.unitPrice*line.quantity)}</b></div><div className="cart-line-controls"><div className="qty-control"><button type="button" aria-label={`${line.name} adetini azalt`} onClick={()=>quantityChange(line.key,-1)}><Icon name="minus" size={16}/></button><span>{line.quantity}</span><button type="button" aria-label={`${line.name} adetini artır`} disabled={line.quantity>=MAX_LINE_QUANTITY} onClick={()=>quantityChange(line.key,1)}><Icon name="plus" size={16}/></button></div><button type="button" className="line-remove" aria-label={`${line.name} ürününü sepetten kaldır`} onClick={()=>setCart(current=>current.filter(item=>item.key!==line.key))}>Kaldır</button></div></div>)}</div>
             <div className="checkout-fields"><h3>Teslimat bilgileri</h3><div className="delivery-switch"><button disabled={!settings.deliveryAvailable} type="button" aria-pressed={delivery==='delivery'} className={delivery==='delivery'?'active':''} onClick={()=>{setDelivery('delivery');setError('');}}>🚲 Paket servis</button><button disabled={!settings.pickupAvailable} type="button" aria-pressed={delivery==='pickup'} className={delivery==='pickup'?'active':''} onClick={()=>{setDelivery('pickup');setError('');}}>🏪 Gel-al</button></div><label>Adınız <span>*</span><input type="text" maxLength={80} value={customer} onChange={e=>{setCustomer(e.target.value);setError('');}} placeholder="Adınızı yazın" autoComplete="name"/></label>{delivery==='delivery'&&<label>Teslimat adresi <span>*</span><textarea rows={2} maxLength={400} value={address} onChange={e=>{setAddress(e.target.value);setError('');}} placeholder="Mahalle, sokak, bina, daire..." autoComplete="street-address"/></label>}<label>Sipariş notu <small>(isteğe bağlı)</small><textarea rows={2} maxLength={300} value={note} onChange={e=>{setNote(e.target.value);setError('');}} placeholder="Kapı zili, özel istekler..."/></label></div>
           </>}
@@ -252,7 +269,7 @@ export default function Storefront() {
         {error&&<p className="form-error" role="alert">{error}</p>}
         {copyResult&&<p className="copy-success" role="status">{copyResult}</p>}
         {messagePreview&&<div className="message-preview" role="status"><strong>Hazırlanan sipariş mesajı</strong><pre>{messagePreview}</pre></div>}
-        <button type="button" className="whatsapp-button" disabled={cart.length===0 || !settings.orderingEnabled} onClick={sendWhatsApp}><Icon name="whatsapp" size={21}/>{settings.orderingEnabled?(LIVE?'WhatsApp mesajını hazırla':'Sipariş mesajını önizle'):'Sipariş alımı kapalı'} <Icon name="arrow" size={17}/></button>
+        <button type="button" className="whatsapp-button" disabled={cart.length===0 || !settings.orderingEnabled} onClick={sendWhatsApp}><Icon name="whatsapp" size={21}/>{settings.orderingEnabled?(LIVE?'3 / 3 · WhatsApp ile devam et':'3 / 3 · Sipariş mesajını gör'):'Sipariş alımı kapalı'} <Icon name="arrow" size={17}/></button>
         <button type="button" className="copy-button" disabled={cart.length===0} onClick={copyMessage}>Sipariş metnini kopyala</button>
         </div>
       </aside>
