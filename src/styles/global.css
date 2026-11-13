@@ -98,7 +98,7 @@
 :where(.config-modal,.cart-panel):focus{outline:none}
 @media (prefers-contrast:more){:where(button,a,input,textarea,select):focus-visible{outline:4px solid #111;outline-offset:3px}}
 
-/* AŞAMA 5.7: Mobil panelde kaydırılabilir tablo yerine tam erişimli ürün kartları */
+/* AŞAMA 5.7 — Mobilde ürün yönetimi: yatay tablo yerine kartlar */
 .admin-mobile-cards{display:none}
 @media(max-width:800px){
   .admin-table-wrap{display:none}
@@ -120,7 +120,7 @@
   .admin-toolbar input,.admin-toolbar button{min-height:44px;font-size:13px}
   .admin-side-link{min-height:44px}
 }
-/* AŞAMA 5.7: Mobil vitrinde tek sütunla okunabilir ürünler ve güçlü dokunma hedefleri */
+/* Mobil vitrinde yatay iki sıkışık ürün kartı yerine okunabilir tek sütun */
 @media(max-width:520px){
   .products-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
   .product-card{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr);align-items:stretch;overflow:hidden;min-height:170px;border-radius:16px}
@@ -200,3 +200,24 @@
  .add-confirm-toast button{font-size:12px;padding:6px 9px}
 }
 @media(max-height:670px) and (max-width:800px){.product-backdrop .config-modal{max-height:94dvh}}
+
+/* AŞAMA 5.9 — okunabilir mobil menü ve erişilebilir yönetim formu */
+@media(max-width:800px){
+ .product-info p{font-size:13px;line-height:1.48}
+ .product-info h3{font-size:clamp(16px,4.3vw,19px)}
+ .product-price small{font-size:11px;line-height:1.35}
+ .cart-hint{font-size:12px;line-height:1.5}
+ .message-preview pre{font-size:12px;max-height:126px}
+ .admin-form label{font-size:14px;line-height:1.4}
+ .admin-form input:not([type=checkbox]),.admin-form select,.admin-form textarea{font-size:16px;min-height:44px}
+ .admin-side-link span{font-size:12px}
+ .admin-dialog-large .admin-dialog-footer{padding-bottom:max(15px,env(safe-area-inset-bottom))}
+ .admin-dialog-large .admin-dialog-footer button{min-height:46px;font-size:14px}
+}
+@media(max-width:360px){
+ .product-card{min-height:194px}
+ .product-info p{font-size:12px}
+ .add-button{min-width:74px}
+}
+.admin-price-help{display:block;color:#805b3e;font-weight:500;line-height:1.5;margin-top:8px;font-size:12px}
+.admin-draft-hint{background:#f7f4ed;border:1px solid #eadcc5;border-radius:10px;padding:11px 12px;font-size:13px;line-height:1.5;margin:0 0 10px;color:#655341}
