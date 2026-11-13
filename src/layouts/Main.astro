@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import {publicUrl} from '../lib/paths';
+const {
+  title = 'Taş Fırın | Pide & Lahmacun',
+  description = 'Taş fırından çıkan lezzetleri keşfedin. Menüye göz atın, sepetinizi hazırlayın ve WhatsApp ile sipariş verin.',
+  noindex = false,
+} = Astro.props;
+// Demo ve eksik yapılandırılmış canlı ortam asla yanlışlıkla indekslenmez.
+const rawSiteUrl = import.meta.env.PUBLIC_SITE_URL || '';
+let siteUrl: URL | undefined;
+try { if (rawSiteUrl) siteUrl = new URL(rawSiteUrl); } catch { /* geçersiz URL indekslenmez */ }
+const indexReady = import.meta.env.PUBLIC_DATA_MODE === 'live' &&
+  import.meta.env.PUBLIC_SITE_READY === 'true' &&
+  siteUrl?.protocol === 'https:' &&
+  Boolean(import.meta.env.PUBLIC_BUSINESS_NAME?.trim());
+const indexed = !noindex && indexReady;
+const canonical = indexed ? new URL(Astro.url.pathname, siteUrl) : null;
+const robots = indexed ? 'index, follow, max-image-preview:large' : 'noindex, nofollow';
+const shareTitle = indexed ? title.replace('Taş Fırın', import.meta.env.PUBLIC_BUSINESS_NAME) : title;
+const realBusiness = indexed && Astro.url.pathname === '/' ? {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: import.meta.env.PUBLIC_BUSINESS_NAME.trim(),
+  description,
+  url: new URL('/', siteUrl).href,
+  ...(import.meta.env.PUBLIC_BUSINESS_PHONE ? {telephone: import.meta.env.PUBLIC_BUSINESS_PHONE} : {}),
+  ...(import.meta.env.PUBLIC_BUSINESS_ADDRESS ? {address: {
+    '@type':'PostalAddress', streetAddress: import.meta.env.PUBLIC_BUSINESS_ADDRESS,
+    addressCountry:'TR'
+  }} : {}),
+} : null;
+const safeJsonLd = realBusiness ? JSON.stringify(realBusiness).replace(/</g, '\\u003c') : null;
+---
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fbf7f0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    {canonical && <link rel="canonical" href={canonical.href} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={shareTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical.href} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={shareTitle} />
+    <meta name="twitter:description" content={description} />
+    {safeJsonLd && <script type="application/ld+json" set:html={safeJsonLd} />}
+    <link rel="icon" type="image/svg+xml" href={publicUrl("/images/favicon.svg")} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>{shareTitle}</title>
+  </head>
+  <body><a class="skip-link" href="#menu">Doğrudan menüye geç</a><slot /></body>
+</html>
