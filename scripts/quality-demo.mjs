@@ -6,7 +6,7 @@ const cfg=read('astro.config.mjs');const paths=read('src/lib/paths.ts');
 const layout=read('src/layouts/Main.astro');const store=read('src/components/Storefront.tsx');
 const panel=read('src/components/AdminPanel.tsx');
 const robots=read('src/pages/robots.txt.ts');
-const wf=read('.github/workflows/pages.yml');
+const wf=read('.github/workflows/pages.yml')+'\n'+read('.github/workflows/astro-ci.yml');
 let bad=0;const check=(name,ok)=>{console.log((ok?'PASS ':'FAIL ')+name);if(!ok)bad++;};
 check('Pages base yolu',cfg.includes("base: '/pideci-lahmacuncu-demo'"));
 check('Ortak görsel yolları',paths.includes('BASE_URL') && store.includes('publicUrl(p.image)') && panel.includes('publicUrl(p.image)'));
