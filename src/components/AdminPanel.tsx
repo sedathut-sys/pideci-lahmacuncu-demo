@@ -261,7 +261,7 @@ export default function AdminPanel() {
     setEditing(p=>{
       if(!p)return p;
       const options=[...(p[kind]||[])];
-      options[index]={...options[index],[key]:val};
+      options[index]=key==='price'?{...options[index],price:Number(val)}:{...options[index],label:String(val)};
       return kind==='variants' && key==='price' && index===0 ? withDisplayedPrice({...p,variants:options},Number(val)) : {...p,[kind]:options};
     });
   }
