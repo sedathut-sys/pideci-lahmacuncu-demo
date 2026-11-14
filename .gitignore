@@ -14,3 +14,7 @@ dist/
 .wrangler/
 .astro/
 coverage/
+
+# Playwright test artefaktları
+playwright-report/
+test-results/
