@@ -1,0 +1,75 @@
+name: G8 — Konsol Ağ Görsel ve Bağlantı Tanılama
+
+on:
+  pull_request:
+    branches:
+      - feature/playwright-g1-gorsel-regresyon-20261114
+
+permissions:
+  contents: read
+
+jobs:
+  g8-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Ayrı G8 test dalından kodu al
+        uses: actions/checkout@v4
+
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Bağımlılıkları kur
+        run: npm install --no-audit --no-fund
+
+      - name: Chromium ve Linux bağımlılıklarını kur
+        run: npx playwright install --with-deps chromium
+
+      - name: Yalnızca izole demoyu derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+
+      - name: Çekirdek testler ve kaynak kalite denetimi
+        run: |
+          npm test
+          npm run quality
+
+      - name: Önceki mobil senaryolar — 28 koşumu koru
+        run: npx playwright test --config=playwright.config.mjs
+
+      - name: G1 onaylı 35 görselin gerçek karşılaştırmasını yeniden çalıştır
+        env:
+          VISUAL_MODE: compare
+        run: npx playwright test --config=playwright.visual.config.mjs
+
+      - name: G8 hata sınıflandırma için 10 birim testi
+        run: node --test tests/g8/collector.test.mjs
+
+      - name: G8 gerçek tarayıcı denetimi ve sentetik negatif test
+        run: npx playwright test --config=playwright.g8.config.mjs
+
+      - name: Türkçe merkezi HTML ve JSON raporu üret
+        if: always()
+        run: node scripts/g8-report.mjs
+
+      - name: G8 raporları, G1 kanıtları ve Playwright hata izleri
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g8-merkezi-turkce-hata-raporu
+          path: |
+            test-results/g8/
+            test-results/g8-results.json
+            test-results/e2e/
+            test-results/visual/
+            test-results/visual-results.json
+            playwright-report/g8/
+            playwright-report/visual/
+            playwright-report/index.html
+          retention-days: 14
+          if-no-files-found: warn
