@@ -1,0 +1,131 @@
+name: G1 - Onaylı Referansları Kaydet ve Pozitif/Negatif Test
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/g1-baseline-approval.yml'
+      - 'scripts/g1-approve-from-artifact.py'
+      - 'tests/visual/**'
+      - 'playwright.visual.config.mjs'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  approved-baselines:
+    if: github.head_ref == 'feature/playwright-g1-gorsel-regresyon-20261114' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Yalnızca G1 test dalını indir
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Onaylanmış arşivi indir ve tam 35 PNG'yi SHA-256 ile doğrula
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if [ -f tests/visual/BASELINES_APPROVED.md ]; then
+            echo "Referans onayı zaten mevcut; dosyaları değiştirmiyorum."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --location --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/14110992304/zip" \
+            -o "$RUNNER_TEMP/g1-user-approved.zip"
+          python3 scripts/g1-approve-from-artifact.py "$RUNNER_TEMP/g1-user-approved.zip"
+
+      - name: Referans PNG'leri yalnızca G1 test dalına işle
+        shell: bash
+        run: |
+          if [ ! -f tests/visual/BASELINES_APPROVED.md ]; then
+            echo "G1 onay işareti yok, GitHub'a gönderim reddedildi." >&2
+            exit 1
+          fi
+          git add -- tests/visual/BASELINES_APPROVED.md tests/visual/__snapshots__
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "Onaylı 35 referans değişmedi."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "test(g1): store exact 35 explicitly approved visual baselines"
+            git push origin "HEAD:$GITHUB_HEAD_REF"
+          fi
+
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Playwright Chromium ve bağımlılıkları kur
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: İzole Taş Fırın demosunu derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+
+      - name: Pozitif test - tüm 35 ekran onaylı referansla karşılaştırılsın
+        env:
+          VISUAL_MODE: compare
+        run: npx playwright test --config=playwright.visual.config.mjs
+
+      - name: Başarılı görsel karşılaştırma raporunu kaydet
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-onayli-gorsel-karsilastirma
+          path: |
+            playwright-report/visual/
+            test-results/visual/
+            test-results/visual-results.json
+          retention-days: 14
+
+      - name: Negatif test - kasıtlı CSS bozulması gerçekten yakalanmalı
+        env:
+          VISUAL_MODE: compare
+          G1_NEGATIVE_TEST: '1'
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --config=playwright.visual.config.mjs \
+            --project=mobil-390px \
+            --grep="G1 müşteri: ana karşılama alanı" \
+            > "$RUNNER_TEMP/g1-negative.log" 2>&1
+          status=$?
+          set -e
+          cat "$RUNNER_TEMP/g1-negative.log"
+          if [ "$status" -eq 0 ]; then
+            echo "KRITIK: kasıtlı görsel bozulma yakalanmadı!" >&2
+            exit 1
+          fi
+          if ! grep -Eiq "toHaveScreenshot|Screenshot comparison failed" "$RUNNER_TEMP/g1-negative.log"; then
+            echo "KRITIK: başarısızlık görsel karşılaştırmadan kaynaklanmıyor!" >&2
+            exit 1
+          fi
+          echo "G1 NEGATIF KABUL: Kasıtlı görsel bozulma beklendiği gibi algılandı."
+
+      - name: Negatif test görsel farklarını sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-negatif-test-fark-gorselleri
+          path: |
+            playwright-report/visual/
+            test-results/visual/
+            test-results/visual-results.json
+          retention-days: 14
+          if-no-files-found: warn
