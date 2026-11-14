@@ -27,7 +27,10 @@ function Icon({name, size=20}: {name:'bag'|'arrow'|'close'|'plus'|'minus'|'searc
 }
 
 export default function Storefront() {
-  const [products, setProducts] = useState<Product[]>(LIVE ? [] : initialProducts);
+  // Hem Astro SSR hem ilk React hidratasyonu aynı (boş) durumla başlar.
+  // Demo localStorage verisi useEffect içinde okunana dek örnek menü gösterilmez.
+  const [products, setProducts] = useState<Product[]>([]);
+  const [menuReady, setMenuReady] = useState(false);
   const [settings, setSettings] = useState<SiteSettings>(site);
   const [loadError, setLoadError] = useState('');
   const [category, setCategory] = useState<string>('Tümü');
@@ -57,14 +60,14 @@ export default function Storefront() {
           const r=await fetch('/api/public/data',{cache:'no-store'});
           if(!r.ok) throw new Error('Menü şu anda yüklenemiyor. Lütfen biraz sonra tekrar deneyin.');
           const data=await r.json();
-          if(!stopped){setProducts(Array.isArray(data.products)?data.products:[]);if(data.settings)setSettings(data.settings);setLoadError('');}
-        } catch(e) {if(!stopped) setLoadError(e instanceof Error?e.message:'Menü yüklenemedi.');}
+          if(!stopped){setProducts(Array.isArray(data.products)?data.products:[]);if(data.settings)setSettings(data.settings);setLoadError('');setMenuReady(true);}
+        } catch(e) {if(!stopped){setLoadError(e instanceof Error?e.message:'Menü yüklenemedi.');setMenuReady(true);}}
       };
       void load();
       const id=window.setInterval(load,60000);
       return ()=>{stopped=true;window.clearInterval(id);};
     }
-    const sync = () => {setProducts(readDemoProducts());setSettings(readDemoSettings());};
+    const sync = () => {setProducts(readDemoProducts());setSettings(readDemoSettings());setMenuReady(true);};
     sync();
     window.addEventListener('storage',sync);
     window.addEventListener(CHANGE_EVENT,sync);
@@ -217,9 +220,9 @@ export default function Storefront() {
 
       <section className="menu-section" id="menu"><div className="container">
         <div className="section-heading-row"><div><p className="overline">LEZZET DOLU BİR MENÜ</p><h2>Ne yesek <em>bugün?</em></h2><p className="section-subtitle">Canınız ne çekiyorsa, ustamızın elinden taptaze.</p></div><div className="section-side-note">{LIVE ? 'Güncel işletme fiyatları ve ürünleri' : 'Menüdeki fiyatlar örnektir.'}<br/>{LIVE ? 'Siparişinizi WhatsApp üzerinden onaylatın.' : 'Gerçek işletme fiyatlarıyla değiştirilecek.'}</div></div>
-        <div className="menu-controls"><div className="filters" role="group" aria-label="Ürün kategorileri">{categories.map(cat=><button key={cat} type="button" aria-pressed={category===cat} className={category===cat?'filter selected':'filter'} onClick={()=>setCategory(cat)}>{cat}</button>)}</div><label className="search-box"><Icon name="search" size={18}/><input type="search" placeholder="Lezzet ara..." aria-label="Menüde ara" value={search} onChange={e=>setSearch(e.target.value)}/></label></div>
+        {menuReady ? <><div className="menu-controls"><div className="filters" role="group" aria-label="Ürün kategorileri">{categories.map(cat=><button key={cat} type="button" aria-pressed={category===cat} className={category===cat?'filter selected':'filter'} onClick={()=>setCategory(cat)}>{cat}</button>)}</div><label className="search-box"><Icon name="search" size={18}/><input type="search" placeholder="Lezzet ara..." aria-label="Menüde ara" value={search} onChange={e=>setSearch(e.target.value)}/></label></div>
         {loadError&&<div className="empty-products" role="alert">{loadError}</div>}<div className="products-grid" aria-live="polite">{visible.map(p=><article className="product-card" key={p.id}><div className="product-image-wrap"><img src={publicUrl(p.image)} alt={p.name} loading="lazy" decoding="async" width="500" height="350"/>{p.badge&&<span className="product-badge">✦ {p.badge}</span>}</div><div className="product-info"><div className="product-category">{p.category}</div><h3>{p.name}</h3><p>{p.description}</p><div className="product-footer"><div className="product-price">{money(p.variants?.[0]?.price??p.price)}<small>{p.variants?.length?'başlangıç fiyatı':'/ adet'}</small></div><button type="button" className="add-button" onClick={()=>p.variants?.length||p.extras?.length?openConfigurator(p):addToCart(p)} aria-label={`${p.name} sepete ekle`}><Icon name="plus" size={19}/> <span>Ekle</span></button></div></div></article>)}</div>
-        {visible.length===0&&<div className="empty-products">{loadError?'':'Bu kategoride ürün bulunamadı. Başka bir kelime deneyin.'}</div>}
+        {visible.length===0&&<div className="empty-products">{loadError?'':'Bu kategoride ürün bulunamadı. Başka bir kelime deneyin.'}</div>}</> : <div className="empty-products" role="status" aria-live="polite">Menü hazırlanıyor…</div>}
       </div></section>
 
       <section className="how-section" id="nedenbiz"><div className="container how-grid"><div><p className="overline">KOLAY SİPARİŞ</p><h2>Üç adımda <em>hazır.</em></h2><p>Üyelik yok: ürününü seç, sepetini kontrol et, WhatsApp mesajını hazırla.</p></div><div className="how-steps"><div className="how-step"><span>01</span><div><h3>Lezzetini seç</h3><p>Menüden dilediğin ürünleri sepete ekle.</p></div></div><div className="how-step"><span>02</span><div><h3>Sepetini hazırla</h3><p>Adetleri belirle, teslimat bilgilerini yaz.</p></div></div><div className="how-step"><span>03</span><div><h3>WhatsApp'tan gönder</h3><p>Hazır mesajını işletmeye ilet, onayını bekle.</p></div></div></div></div></section>
