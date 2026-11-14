@@ -1,4 +1,4 @@
-name: G1 - Onaylı Referansları Kaydet ve Pozitif/Negatif Test
+name: G1 - Onaylı Referanslarla Pozitif ve Negatif Görsel Denetim
 
 on:
   pull_request:
@@ -10,8 +10,7 @@ on:
       - 'playwright.visual.config.mjs'
 
 permissions:
-  contents: write
-  actions: read
+  contents: read
 
 jobs:
   approved-baselines:
@@ -26,40 +25,39 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Onaylanmış arşivi indir ve tam 35 PNG'yi SHA-256 ile doğrula
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Onaylı 35 referansın eksiksizliğini ve SHA-256 bütünlüğünü doğrula
         shell: bash
         run: |
-          if [ -f tests/visual/BASELINES_APPROVED.md ]; then
-            echo "Referans onayı zaten mevcut; dosyaları değiştirmiyorum."
-            exit 0
-          fi
-          curl --fail-with-body --silent --show-error --location --retry 3 \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/14110992304/zip" \
-            -o "$RUNNER_TEMP/g1-user-approved.zip"
-          python3 scripts/g1-approve-from-artifact.py "$RUNNER_TEMP/g1-user-approved.zip"
-
-      - name: Referans PNG'leri yalnızca G1 test dalına işle
-        shell: bash
-        run: |
-          if [ ! -f tests/visual/BASELINES_APPROVED.md ]; then
-            echo "G1 onay işareti yok, GitHub'a gönderim reddedildi." >&2
-            exit 1
-          fi
-          git add -- tests/visual/BASELINES_APPROVED.md tests/visual/__snapshots__
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo "Onaylı 35 referans değişmedi."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "test(g1): store exact 35 explicitly approved visual baselines"
-            git push origin "HEAD:$GITHUB_HEAD_REF"
-          fi
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p = Path('tests/visual/BASELINES_APPROVED.md')
+          assert p.is_file(), 'Approved baseline marker missing'
+          profiles = ('mobil-320px','mobil-360px','mobil-390px','mobil-430px','masaustu-1280px')
+          names = ('musteri-ana-alan.png','musteri-menu-kartlari.png',
+                   'musteri-urun-secenekleri.png','musteri-sepet.png',
+                   'panel-urun-listesi.png','panel-urun-duzenleyici.png',
+                   'panel-form-alt-bolum.png')
+          root = Path('tests/visual/__snapshots__')
+          expected = []
+          for profile in profiles:
+              for name in names:
+                  expected.append(root / profile / name)
+          found = list(root.rglob('*.png'))
+          assert len(found) == len(expected) == 35, f'Expected 35 PNGs, got {len(found)}'
+          checksum = hashlib.sha256()
+          for path in sorted(expected):
+              assert path.is_file(), 'Missing approved reference: ' + str(path)
+              rel = path.relative_to(root).as_posix()
+              raw = path.read_bytes()
+              assert raw[:8] == b'\x89PNG\r\n\x1a\n', 'Invalid approved PNG: ' + rel
+              origin = 'test-results/visual-baseline-candidates/' + rel
+              checksum.update(origin.encode() + b'\0' + len(raw).to_bytes(8, 'big') + raw)
+          expected_sha = 'ed93c886e685a6a0c168378e9004e1ffcbf07b194accae6ad00334bf3df61f40'
+          assert checksum.hexdigest() == expected_sha, 'Approved screenshot checksum mismatch'
+          assert expected_sha in p.read_text('utf-8'), 'Approval marker not linked to validated images'
+          print('PASS: all 35 user-approved screenshots are intact, exact SHA-256 match.')
+          PY
 
       - name: Node.js 24 kur
         uses: actions/setup-node@v4
