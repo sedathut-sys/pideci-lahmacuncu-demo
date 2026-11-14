@@ -80,7 +80,7 @@ export async function restoreBackup(page,data,{accept=true}={}){
   return dialogs;
 }
 export async function openCategories(page){
-  await page.getByRole('button',{name:'Kategoriler'}).click();
+  await page.getByRole('button',{name:/Kategoriler/}).click();
   await expect(page.locator('.admin-category-row')).toHaveCount(4);
 }
 export async function addCategory(page,name){
@@ -100,7 +100,4 @@ export async function makePng(page){
     return c.toDataURL('image/png').split(',')[1];
   });
   return Buffer.from(base64,'base64');
-}
-export function screenshotEvidence(info,page,label){
-  return info.attach(label+'.png',{body:page.screenshot({fullPage:true}),contentType:'image/png'});
 }
