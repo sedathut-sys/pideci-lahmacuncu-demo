@@ -64,6 +64,10 @@ test('5.10.9: değişiklik uyarısı, İptal ve Kaydet gerçek ürün düzenleme
   await expect(page.locator('.admin-mobile-product').filter({hasText:'Kıymalı Pide'}).first()).toContainText('230,50');
   await page.reload();
   await expect(page.locator('.admin-mobile-product').filter({hasText:'Kıymalı Pide'}).first()).toContainText('230,50');
+  const customer=await page.context().newPage();
+  await customer.goto('./');
+  const pide=customer.locator('.product-card').filter({has:customer.getByRole('heading',{name:'Kıymalı Pide'})});
+  await expect(pide.locator('.product-price')).toContainText('230,50');
   await noOverflow(page);
 });
 
