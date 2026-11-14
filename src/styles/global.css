@@ -319,3 +319,33 @@
   .admin-top-actions{justify-content:flex-end}
   .admin-top h1{overflow-wrap:anywhere}
 }
+
+/* AŞAMA 5.10.10 — Mobil müşteri menüsü: 5 kategori = 3 + 2 görünür düğme.
+   Yalnızca 520px ve altını etkiler; kategori adedi değişince grid otomatik uzar. */
+@media(max-width:520px){
+  .menu-controls .filters{
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:8px;
+    width:100%;
+    min-width:0;
+    overflow-x:visible;
+    overflow-y:visible;
+    padding:0;
+  }
+  .menu-controls .filters>.filter{
+    grid-column:span 2;
+    min-width:0;
+    min-height:46px;
+    height:auto;
+    padding:10px 5px;
+    font-size:clamp(11px,3vw,13px);
+    line-height:1.25;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    text-align:center;
+  }
+  /* Tam 5 kategori olduğunda son ikisi 2. satırı eşit paylaşır. */
+  .menu-controls .filters>.filter:nth-child(4):nth-last-child(2),
+  .menu-controls .filters>.filter:nth-child(5):last-child{grid-column:span 3}
+}
