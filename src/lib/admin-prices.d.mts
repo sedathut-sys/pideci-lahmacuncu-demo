@@ -4,3 +4,4 @@ export function withDisplayedPrice(product:Product,price:number):Product;
 export function syncDisplayPrice(product:Product):Product;
 export function addVariant(product:Product):Product;
 export function removeVariant(product:Product,index:number):Product;
+export function normalizePriceInput(value:string): string;
