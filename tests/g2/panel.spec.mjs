@@ -200,7 +200,7 @@ test('G2-12 kaydedilmemiş değişiklik: Vazgeç onayı reddi/kabulü ve ESC',as
   const editor=await editEditor(page,info);
   await nameInput(editor).fill('G2 KAYDEDİLMEMİŞ');
   page.once('dialog',d=>d.dismiss());
-  await editor.getByRole('button',{name:'Vazgeç'}).click();
+  await editor.getByRole('button',{name:/^(Vazgeç|İptal)$/}).click();
   await expect(editor).toBeVisible();
   page.once('dialog',d=>d.accept());
   await editor.getByRole('button',{name:'Kapat'}).click();
