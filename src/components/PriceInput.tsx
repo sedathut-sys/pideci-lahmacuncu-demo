@@ -11,6 +11,6 @@ export default function PriceInput({value,onChange,ariaLabel}:{value:number;onCh
   }
   return <input type="text" inputMode="decimal" autoComplete="off" aria-label={ariaLabel}
     value={draft} onChange={e=>change(e.currentTarget.value)}
-    onBlur={()=>{if(Number.isFinite(value))setDraft(String(value).replace('.',','));}}
+    onBlur={()=>{if(Number.isFinite(value))setDraft(Number.isInteger(value)?String(value):value.toFixed(2).replace('.',','));}}
     aria-invalid={!Number.isFinite(value)} />;
 }
