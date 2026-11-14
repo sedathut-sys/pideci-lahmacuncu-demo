@@ -141,3 +141,22 @@ test('G1 panel: yeni ürün düzenleme penceresi', async ({ page }, info) => {
   await compareOrCapture(editor, info, 'panel-urun-duzenleyici.png');
   // Kaydetme yapılmaz; izole demo bağlamı korunur.
 });
+
+test('G1 panel: formun alt bölümü, porsiyon ve ekstra alanları', async ({ page }, info) => {
+  await page.goto('./panel/');
+  await expect(page.locator('.admin-mobile-product')).toHaveCount(8);
+  await page.getByRole('button', { name: /Yeni ürün/ }).click();
+  const editor = page.getByRole('dialog', { name: 'Ürün oluştur' });
+  await expect(editor).toBeVisible();
+  await stablePage(page);
+  const form = editor.locator('.admin-form');
+  await expect(form).toBeVisible();
+  const dimensions = await form.evaluate(node => ({
+    scrollHeight: node.scrollHeight,
+    clientHeight: node.clientHeight,
+  }));
+  expect(dimensions.scrollHeight).toBeGreaterThan(dimensions.clientHeight);
+  await form.evaluate(node => { node.scrollTop = node.scrollHeight; });
+  await expect(editor.getByRole('button', { name: 'Ürünü kaydet' }).last()).toBeVisible();
+  await compareOrCapture(editor, info, 'panel-form-alt-bolum.png');
+});
