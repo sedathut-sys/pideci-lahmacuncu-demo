@@ -170,13 +170,26 @@ export default function Storefront() {
     catch {setCopyResult('Kopyalama izni verilemedi. Mesajı aşağıdaki kutudan seçerek kopyalayabilirsiniz.');}
   }
 
+  // SSR and the first client render must agree; never show stale default business
+  // details before the demo storage or live API has been read.
+  const displaySettings=menuReady && !loadError ? settings : {
+    ...site,
+    name:'İşletme bilgileri hazırlanıyor…',
+    tagline:'',
+    address:'',
+    hours:'',
+    phoneDisplay:'',
+    whatsappNumber:'',
+    notice:''
+  };
+
   return <>
-    <div className="announcement"><span className="announcement-dot"/> {settings.name} · Sıcacık lezzetler <span className="announcement-separator">✦</span> <strong>{LIVE ? "Online menümüz" : "SATIŞ DEMOSU · Gerçek sipariş alınmaz"}</strong></div>
+    <div className="announcement"><span className="announcement-dot"/> {displaySettings.name} · Sıcacık lezzetler <span className="announcement-separator">✦</span> <strong>{LIVE ? "Online menümüz" : "SATIŞ DEMOSU · Gerçek sipariş alınmaz"}</strong></div>
     <header className="topbar">
       <div className="container topbar-inner">
-        <a className="brand" href="#anasayfa" aria-label={`${settings.name} ana sayfa`}>
-          <span className="brand-mark">{brandInitials(settings.name).slice(0,1)}<span>{brandInitials(settings.name).slice(1)}</span></span>
-          <span className="brand-text">{settings.name.toLocaleUpperCase('tr-TR')} <small>{brandSubtitle(settings.name)}</small></span>
+        <a className="brand" href="#anasayfa" aria-label={`${displaySettings.name} ana sayfa`}>
+          <span className="brand-mark">{brandInitials(displaySettings.name).slice(0,1)}<span>{brandInitials(displaySettings.name).slice(1)}</span></span>
+          <span className="brand-text">{displaySettings.name.toLocaleUpperCase('tr-TR')} <small>{brandSubtitle(displaySettings.name)}</small></span>
         </a>
         <nav id="site-navigation" className={mobileNav?'nav-links nav-visible':'nav-links'} aria-label="Ana menü">
           <a href="#anasayfa" onClick={()=>setMobileNav(false)}>Ana Sayfa</a>
@@ -197,8 +210,8 @@ export default function Storefront() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line"/> GELENEKSEL LEZZET, MODERN SİPARİŞ</div>
-            <h1>Lezzetin en güzel<br/>hali, <em>{settings.name}.</em></h1>
-            <p className="hero-lead">{settings.tagline} Özenle hazırlanan lezzetleri incele, üye olmadan kolayca sipariş mesajını oluştur.</p>
+            <h1>Lezzetin en güzel<br/>hali, <em>{displaySettings.name}.</em></h1>
+            <p className="hero-lead">{displaySettings.tagline} Özenle hazırlanan lezzetleri incele, üye olmadan kolayca sipariş mesajını oluştur.</p>
             <div className="hero-buttons"><a href="#menu" className="primary-button">Menüyü İncele <Icon name="arrow" size={19}/></a><a href="#nedenbiz" className="link-button">Bizi tanıyın <span>↗</span></a></div>
             <div className="hero-notes"><div className="note-icon"><Icon name="check" size={16}/></div><span>Üyelik yok, uğraş yok</span><i/> <div className="note-icon"><Icon name="check" size={16}/></div><span>WhatsApp'tan kolay sipariş</span></div>
           </div>
@@ -230,7 +243,7 @@ export default function Storefront() {
       <section className="cta-section"><div className="container"><div className="cta-panel"><div><p className="overline">CANINIZ PİDE Mİ ÇEKTİ?</p><h2>Bir mesajla<br/><em>sipariş verin.</em></h2><p>Menüden dilediğinizi seçin; siparişinizi tek sepetten tamamlayın.</p><a className="white-button" href="#menu">Menüye dön <Icon name="arrow" size={19}/></a></div><img src={publicUrl("/images/lahmacun.svg")} alt="Çıtır lahmacun" width="420" height="340" loading="lazy" decoding="async"/></div></div></section>
     </main>
 
-    <footer id="iletisim" className="site-footer"><div className="container footer-main"><div><a className="brand brand-footer" href="#anasayfa"><span className="brand-mark">{brandInitials(settings.name).slice(0,1)}<span>{brandInitials(settings.name).slice(1)}</span></span><span className="brand-text">{settings.name.toLocaleUpperCase('tr-TR')} <small>{brandSubtitle(settings.name)}</small></span></a><p>{settings.tagline}</p>{!LIVE&&<div className="demo-disclaimer">SATIŞ DEMOSU · Gerçek işletme bilgisi veya sipariş hattı değildir.</div>}</div><div><h4>Hızlı bağlantılar</h4><a href="#anasayfa">Ana sayfa</a><a href="#menu">Menümüz</a><a href="#nedenbiz">Nasıl sipariş verilir?</a></div><div><h4>İletişim bilgileri</h4><span><Icon name="map" size={18}/> {settings.address}</span><span><Icon name="clock" size={18}/> {settings.hours}</span><span>WhatsApp: <strong>{settings.phoneDisplay}</strong></span></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} {settings.name}{LIVE?'':' · Örnek site şablonu.'}</span><a href={publicUrl("/panel/")}>{LIVE?'İşletmeci girişi':'İşletmeci paneli demosu'} ↗</a></div></footer>
+    <footer id="iletisim" className="site-footer"><div className="container footer-main"><div><a className="brand brand-footer" href="#anasayfa"><span className="brand-mark">{brandInitials(displaySettings.name).slice(0,1)}<span>{brandInitials(displaySettings.name).slice(1)}</span></span><span className="brand-text">{displaySettings.name.toLocaleUpperCase('tr-TR')} <small>{brandSubtitle(displaySettings.name)}</small></span></a><p>{displaySettings.tagline}</p>{!LIVE&&<div className="demo-disclaimer">SATIŞ DEMOSU · Gerçek işletme bilgisi veya sipariş hattı değildir.</div>}</div><div><h4>Hızlı bağlantılar</h4><a href="#anasayfa">Ana sayfa</a><a href="#menu">Menümüz</a><a href="#nedenbiz">Nasıl sipariş verilir?</a></div><div><h4>İletişim bilgileri</h4><span><Icon name="map" size={18}/> {displaySettings.address}</span><span><Icon name="clock" size={18}/> {displaySettings.hours}</span><span>WhatsApp: <strong>{displaySettings.phoneDisplay}</strong></span></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} {displaySettings.name}{LIVE?'':' · Örnek site şablonu.'}</span><a href={publicUrl("/panel/")}>{LIVE?'İşletmeci girişi':'İşletmeci paneli demosu'} ↗</a></div></footer>
 
     {cart.length > 0 && !selected && !cartOpen && <div className="mobile-cart-bar" aria-label="Sepet özeti">
       <div className="mobile-cart-count"><span>{cartQuantity(cart)} ürün</span><strong>{money(total)}</strong></div>

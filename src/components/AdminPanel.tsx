@@ -1,7 +1,7 @@
 import {publicUrl} from '../lib/paths';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { initialProducts,readDemoProducts,writeDemoProducts,type Product, type ProductExtra, type ProductVariant } from '../data/products';
-import { site,brandInitials,readDemoSettings,writeDemoSettings,type SiteSettings } from '../data/config';
+import { initialProducts,readDemoProducts,writeDemoProducts,mutateDemoProducts,STORAGE_KEY,CHANGE_EVENT,type Product, type ProductExtra, type ProductVariant } from '../data/products';
+import { site,brandInitials,readDemoSettings,writeDemoSettings,SITE_KEY,SITE_CHANGED,type SiteSettings } from '../data/config';
 import {addCategory,removeCategory,validateCategories,assertCategoriesUsed} from '../lib/admin-core.mjs';
 import {displayedPrice,withDisplayedPrice,syncDisplayPrice,addVariant,removeVariant} from '../lib/admin-prices.mjs';
 import {formatAdminPrice,validateProductPricing} from '../lib/price-rules.mjs';
@@ -67,7 +67,23 @@ export default function AdminPanel() {
   }
   useEffect(()=>{
     let mounted=true;
-    if(!LIVE){setProducts(readDemoProducts());setSettings(readDemoSettings());return;}
+    if(!LIVE){
+      const syncProducts=()=>setProducts(readDemoProducts());
+      const syncSettings=()=>setSettings(readDemoSettings());
+      syncProducts();syncSettings();
+      const onStorage=(event:StorageEvent)=>{
+        if(event.key===STORAGE_KEY||event.key===null)syncProducts();
+        if(event.key===SITE_KEY||event.key===null)syncSettings();
+      };
+      window.addEventListener('storage',onStorage);
+      window.addEventListener(CHANGE_EVENT,syncProducts);
+      window.addEventListener(SITE_CHANGED,syncSettings);
+      return ()=>{
+        window.removeEventListener('storage',onStorage);
+        window.removeEventListener(CHANGE_EVENT,syncProducts);
+        window.removeEventListener(SITE_CHANGED,syncSettings);
+      };
+    }
     (async()=>{
       try {
         const me=await responseJson(await fetch('/api/admin/me',{credentials:'same-origin',cache:'no-store'}));
@@ -155,13 +171,24 @@ export default function AdminPanel() {
     try{await api('POST','/api/admin/logout');}catch{/* oturumun süresi zaten dolmuş olabilir */}
     setCsrf('');setStatus('login');setProducts([]);setPassword('');
   }
+  function ensureNoConflictingEdit(current:Product|undefined,expected:Product|undefined){
+    if(!current || !expected ||
+       JSON.stringify(syncDisplayPrice(structuredClone(current)))!==
+       JSON.stringify(syncDisplayPrice(structuredClone(expected)))){
+      throw new Error('Bu ürün başka bir sekmede değiştirildi. Kaydedilmemiş düzenlemeniz korunuyor; güncel ürünü yeniden açın.');
+    }
+  }
   async function saveProduct() {
     if(!editing)return;
     const next=syncDisplayPrice(normalize(editing));
     if(next.name.length<2) {warn(new Error('Ürün adı en az iki karakter olmalı.'));return;}
     try{validateProductPricing(next);}catch(e){warn(e);return;}
     if(!settings.categories.includes(next.category)) {warn(new Error('Geçerli bir kategori seçin.'));return;}
-    for(const opts of [next.variants||[],next.extras||[]]) {if(new Set(opts.map(x=>x.label.toLocaleLowerCase('tr-TR'))).size!==opts.length){warn(new Error('Aynı porsiyon veya ekstra seçenek iki kez eklenemez.'));return;}}
+    for(const opts of [next.variants||[],next.extras||[]]) {
+      if(new Set(opts.map(x=>x.label.toLocaleLowerCase('tr-TR'))).size!==opts.length){
+        warn(new Error('Aynı porsiyon veya ekstra seçenek iki kez eklenemez.'));return;
+      }
+    }
     setBusy(true);
     try{
       if(LIVE) {
@@ -169,8 +196,20 @@ export default function AdminPanel() {
         if(isNew)setProducts(p=>[...p,result.product]);else setProducts(p=>p.map(x=>x.id===next.id?result.product:x));
       } else {
         const product={...next,id:isNew?crypto.randomUUID():next.id};
-        const changed=isNew?[...products,product]:products.map(x=>x.id===product.id?product:x);
-        writeDemoProducts(changed);setProducts(changed);
+        const baseline=isNew?null:JSON.parse(editingBaseline) as Product;
+        const updated=await mutateDemoProducts(latest=>{
+          if(!readDemoSettings().categories.includes(product.category)){
+            throw new Error('Kategori başka bir sekmede değiştirildi. Kaydetmeden önce kontrol edin.');
+          }
+          if(isNew){
+            if(latest.some(p=>p.id===product.id))throw new Error('Ürün kimliği çakıştı. Yeniden deneyin.');
+            return [...latest,product];
+          }
+          const current=latest.find(p=>p.id===product.id);
+          ensureNoConflictingEdit(current,baseline||undefined);
+          return latest.map(p=>p.id===product.id?product:p);
+        });
+        setProducts(updated);
       }
       uploadGeneration.current++;
       setEditing(null);window.setTimeout(()=>returnFocus.current?.focus(),0);info('Ürün kaydedildi.');
@@ -180,20 +219,38 @@ export default function AdminPanel() {
     if(!confirm(`“${product.name}” ürününü silmek istiyor musun?`))return;
     setBusy(true);
     try{
-      if(LIVE)await api('DELETE',`/api/admin/products/${encodeURIComponent(product.id)}`);
-      const next=products.filter(p=>p.id!==product.id);setProducts(next);
-      if(!LIVE)writeDemoProducts(next);
+      if(LIVE){
+        await api('DELETE',`/api/admin/products/${encodeURIComponent(product.id)}`);
+        setProducts(products.filter(p=>p.id!==product.id));
+      }else{
+        const updated=await mutateDemoProducts(latest=>{
+          ensureNoConflictingEdit(latest.find(p=>p.id===product.id),product);
+          return latest.filter(p=>p.id!==product.id);
+        });
+        setProducts(updated);
+      }
       info('Ürün silindi.');
     }catch(e){warn(e);}finally{setBusy(false);}
   }
   async function toggleProduct(product:Product){
-    const next={...product,available:!product.available};
     setBusy(true);
     try{
-      if(LIVE) await api('PUT',`/api/admin/products/${encodeURIComponent(product.id)}`,normalize(next));
-      const updated=products.map(p=>p.id===product.id?next:p);
-      setProducts(updated);if(!LIVE)writeDemoProducts(updated);
-      info(next.available?'Ürün yeniden gösteriliyor.':'Ürün geçici olarak gizlendi.');
+      if(LIVE){
+        const next={...product,available:!product.available};
+        await api('PUT',`/api/admin/products/${encodeURIComponent(product.id)}`,normalize(next));
+        setProducts(products.map(p=>p.id===product.id?next:p));
+        info(next.available?'Ürün yeniden gösteriliyor.':'Ürün geçici olarak gizlendi.');
+      }else{
+        let becameAvailable=false;
+        const updated=await mutateDemoProducts(latest=>{
+          const current=latest.find(p=>p.id===product.id);
+          ensureNoConflictingEdit(current,product);
+          becameAvailable=!current!.available;
+          return latest.map(p=>p.id===product.id?{...p,available:becameAvailable}:p);
+        });
+        setProducts(updated);
+        info(becameAvailable?'Ürün yeniden gösteriliyor.':'Ürün geçici olarak gizlendi.');
+      }
     }catch(e){warn(e);}finally{setBusy(false);}
   }
   async function saveSettings(){

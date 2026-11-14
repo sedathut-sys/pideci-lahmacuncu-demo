@@ -11,8 +11,9 @@ test('Mobil panel ürün kartları ve tüm yönetim eylemleri',()=>{
 });
 test('Marka bilgileri vitrin başlığında tek ayardan okunuyor',()=>{
  const store=read('src/components/Storefront.tsx');
- assert.match(store,/settings\.name\.toLocaleUpperCase/);
- assert.match(store,/brandInitials\(settings\.name\)/);
+ assert.match(store,/const displaySettings=menuReady && !loadError \? settings/);
+ assert.match(store,/displaySettings\.name\.toLocaleUpperCase/);
+ assert.match(store,/brandInitials\(displaySettings\.name\)/);
  assert.doesNotMatch(store,/<span className="brand-text">TAŞ FIRIN/);
 });
 test('Mobil kart düzeni ve dokunma hedefleri tanımlı',()=>{

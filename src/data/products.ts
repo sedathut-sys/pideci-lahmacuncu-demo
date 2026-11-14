@@ -96,3 +96,28 @@ export function writeDemoProducts(products: Product[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
+
+
+/**
+ * DEMO only. Synchronizes product writes between tabs in browsers with Web Locks.
+ * A read-modify-write operation on localStorage alone is not atomic across tabs.
+ * Unsupported browsers receive best-effort latest-read semantics, not an atomic guarantee.
+ * LIVE mode must enforce concurrency on the server instead.
+ */
+export async function mutateDemoProducts(
+  change:(latest:Product[])=>Product[]
+):Promise<Product[]> {
+  if(typeof window==='undefined')throw new Error('Demo ürünleri yalnız tarayıcıda değiştirilebilir.');
+  const commit=()=>{
+    const latest=readDemoProducts();
+    const updated=change(latest);
+    if(!Array.isArray(updated)||!updated.every(isValidProduct))throw new Error('Ürün verisi geçersiz.');
+    writeDemoProducts(updated);
+    return updated;
+  };
+  if(typeof navigator!=='undefined' && navigator.locks?.request){
+    return navigator.locks.request(STORAGE_KEY+':write',{mode:'exclusive'},commit);
+  }
+  // Fallback has no cross-tab atomicity: never claim equivalent safety.
+  return commit();
+}
