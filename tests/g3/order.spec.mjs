@@ -131,7 +131,7 @@ test('G3-10 çoklu ürün ve kuruşlu ara toplam: 215 + 115 + 40',async ({page})
   await expect(cart.locator('.cart-total strong')).toContainText('370,00');
   await pickup(cart);
   const message=await preview(cart);
-  await expect(message).toContainText('Ürün toplamı: 370,00');
+  await expect(message).toContainText(/Ürün toplamı:\s*₺?370,00/);
   await expect(message).toContainText('Ayran');
 });
 
