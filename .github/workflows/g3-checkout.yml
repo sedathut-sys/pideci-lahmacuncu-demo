@@ -39,6 +39,9 @@ jobs:
           npm test
           npm run quality
 
+      - name: G3 hızlı tarama — 390 px için 18 senaryo
+        run: npx playwright test --config=playwright.g3.config.mjs --project=mobil-390px --retries=0 --timeout=30000
+
       - name: G1 onay kaydı ve 35 PNG bütünlük kontrolü
         run: |
           python3 - <<'PY'
@@ -78,9 +81,6 @@ jobs:
 
       - name: G3 sipariş matematiği, limit, minimum tutar 11 birim testi
         run: node --test tests/g3/order-core.test.mjs
-
-      - name: G3 hızlı tarama — 390 px için 18 senaryo
-        run: npx playwright test --config=playwright.g3.config.mjs --project=mobil-390px --retries=0 --timeout=30000
 
       - name: G3 sepet/sipariş tam matris — 18 senaryo × 5 profil
         run: npx playwright test --config=playwright.g3.config.mjs
