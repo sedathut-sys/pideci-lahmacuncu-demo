@@ -1,0 +1,192 @@
+{
+  "title": "G4.1.9 Android Test Sonuçları",
+  "project": "C:\\Users\\PC\\TasFirin-G418-Test",
+  "baseUrl": "http://127.0.0.1:4321/pideci-lahmacuncu-demo/",
+  "device": {
+    "model": "26012RN62Y",
+    "android": "16",
+    "chrome": "156.0.8078.79",
+    "physicalPixels": "1080x2396",
+    "densityDpi": 450,
+    "physicalTestStatus": "KISMİ",
+    "cssViewport": "384x737 (Chrome viewport); screen 384x852; DPR 2.8125"
+  },
+  "emulated": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 560
+      },
+      "categoryCount": 5,
+      "categoryRows": 2,
+      "productCount": 8,
+      "checks": [
+        {
+          "name": "Menü araması",
+          "expected": "Kıymalı Pide eşleşmesi",
+          "actual": "1 kart",
+          "status": "PASS"
+        },
+        {
+          "name": "Kategori seçimi",
+          "expected": "aria-pressed=true",
+          "actual": "Tümü: true",
+          "status": "PASS"
+        },
+        {
+          "name": "Yatay taşma",
+          "expected": "document scrollWidth <= viewport",
+          "actual": "320 / 320",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": [],
+      "screenshot": "playwright-320x560.png",
+      "status": "PASS"
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 720
+      },
+      "categoryCount": 5,
+      "categoryRows": 2,
+      "productCount": 8,
+      "checks": [
+        {
+          "name": "Menü araması",
+          "expected": "Kıymalı Pide eşleşmesi",
+          "actual": "1 kart",
+          "status": "PASS"
+        },
+        {
+          "name": "Kategori seçimi",
+          "expected": "aria-pressed=true",
+          "actual": "Tümü: true",
+          "status": "PASS"
+        },
+        {
+          "name": "Yatay taşma",
+          "expected": "document scrollWidth <= viewport",
+          "actual": "320 / 320",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": [],
+      "screenshot": "playwright-320x720.png",
+      "status": "PASS"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "categoryCount": 5,
+      "categoryRows": 2,
+      "productCount": 8,
+      "checks": [
+        {
+          "name": "Menü araması",
+          "expected": "Kıymalı Pide eşleşmesi",
+          "actual": "1 kart",
+          "status": "PASS"
+        },
+        {
+          "name": "Kategori seçimi",
+          "expected": "aria-pressed=true",
+          "actual": "Tümü: true",
+          "status": "PASS"
+        },
+        {
+          "name": "Yatay taşma",
+          "expected": "document scrollWidth <= viewport",
+          "actual": "390 / 390",
+          "status": "PASS"
+        }
+      ],
+      "pageErrors": [],
+      "screenshot": "playwright-390x844.png",
+      "status": "PASS"
+    }
+  ],
+  "physicalTests": [
+    {
+      "name": "Panel ve ürün listesi",
+      "status": "PASS",
+      "expected": "Yerel demo paneli açılır, ürünler görüntülenir",
+      "actual": "8 ürünlü liste açıldı; 1080x2396 PNG kanıtı alındı",
+      "evidence": [
+        "android-panel-initial.png",
+        "android-panel-products.png"
+      ]
+    },
+    {
+      "name": "Kıymalı Pide düzenleyici ve klavye",
+      "status": "PASS",
+      "expected": "Düzenleyici açılır, alanlar ve klavye kullanılabilir",
+      "actual": "Düzenleyici gerçek dokunmayla açıldı; Türkçe Android klavyesi açıldı ve Geri ile kapandı",
+      "evidence": [
+        "android-panel-editor-keyboard.png",
+        "android-panel-keyboard-hidden.png"
+      ]
+    },
+    {
+      "name": "Test değişikliği ve İptal",
+      "status": "PASS",
+      "expected": "Değişiklik iptal edilince kaydedilmez",
+      "actual": "Ürün adına TEST eklendi; onay iletişiminde Tamam seçilince düzenleyici kapandı, liste özgün Kıymalı Pide adını gösterdi",
+      "evidence": [
+        "android-panel-test-edit.png",
+        "android-panel-cancel-confirm.png",
+        "android-panel-cancelled.png"
+      ]
+    },
+    {
+      "name": "Kaydet/İptal dokunma alanı",
+      "status": "PASS",
+      "expected": "Klavye açıkken düğmeler görünür ve çakışmaz",
+      "actual": "İptal ve Ürünü kaydet aynı alt sırada ayrı görünüyor; yaklaşık 44 CSS px yüksek; başlık Kaydet/Kapat ile çakışma yok",
+      "evidence": [
+        "android-panel-editor-keyboard.png"
+      ]
+    },
+    {
+      "name": "Porsiyon ve ekstra alanları",
+      "status": "BELİRSİZ",
+      "expected": "Alanlar gerçek cihazda kaydırılarak görülür",
+      "actual": "DOM’da porsiyon ve ekstra alanları bulundu; cihazda kaydırma kontrolü tamamlanmadı",
+      "evidence": [
+        "android-panel-editor.png"
+      ]
+    },
+    {
+      "name": "Müşteri sayfası filtre ve arama",
+      "status": "PASS",
+      "expected": "5 düğme 3+2 dizilir; kategori ve arama filtreler",
+      "actual": "Gerçek ekranda 5 görünür düğme 3+2 dizildi; Pide dokunuşu ve Pide araması 3 ürün gösterdi; yatay taşma yok",
+      "evidence": [
+        "android-storefront-menu.png",
+        "android-storefront-pide.png",
+        "android-storefront-search.png"
+      ]
+    },
+    {
+      "name": "Uzun etiketler, 7 ve 8 kategori",
+      "status": "BELİRSİZ",
+      "expected": "Etiketler taşmaz; düzen kategori sayısıyla uyumlu",
+      "actual": "Mevcut etiketlerde taşma görülmedi; 7/8 kategori senaryoları izole veriyle denenmedi",
+      "evidence": [
+        "android-storefront-menu.png"
+      ]
+    }
+  ],
+  "categoryScenarios": {
+    "five": "Gerçek telefon ve Playwright’ta Tümü dahil 5 filtre düğmesi, 3+2 satır.",
+    "seven": "BELİRSİZ: izole senaryo çalıştırılmadı.",
+    "eight": "BELİRSİZ: izole senaryo çalıştırılmadı."
+  },
+  "projectSourceChanged": false,
+  "buildOrProjectTestsRun": false,
+  "githubUpload": false,
+  "caveat": "Bu rapor Playwright emülasyon sonuçlarını ve gerçek cihazdaki doğrulanabilir sınırları ayrı tutar. Emülasyon sonucu fiziksel cihaz PASS yerine geçmez."
+}

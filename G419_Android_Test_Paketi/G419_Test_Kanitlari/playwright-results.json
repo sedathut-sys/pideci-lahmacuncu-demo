@@ -1,0 +1,446 @@
+[
+  {
+    "kind": "Playwright emülasyonu",
+    "viewport": {
+      "width": 320,
+      "height": 560
+    },
+    "title": "Taş Fırın | Pide & Lahmacun",
+    "screen": {
+      "width": 320,
+      "height": 560
+    },
+    "document": {
+      "clientWidth": 320,
+      "scrollWidth": 320
+    },
+    "categories": [
+      {
+        "text": "Tümü",
+        "x": 15,
+        "y": 1206.453125,
+        "width": 91.328125,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Pide",
+        "x": 114.328125,
+        "y": 1206.453125,
+        "width": 91.328125,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Lahmacun",
+        "x": 213.65625,
+        "y": 1206.453125,
+        "width": 91.34375,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Yan Ürün",
+        "x": 15,
+        "y": 1260.453125,
+        "width": 141,
+        "height": 46,
+        "scrollWidth": 139,
+        "clientWidth": 139
+      },
+      {
+        "text": "İçecek",
+        "x": 164,
+        "y": 1260.453125,
+        "width": 141,
+        "height": 46,
+        "scrollWidth": 139,
+        "clientWidth": 139
+      }
+    ],
+    "categoryCount": 5,
+    "categoryRows": 2,
+    "filterScrollWidth": 290,
+    "filterClientWidth": 290,
+    "products": 8,
+    "descriptions": [
+      {
+        "text": "İncecik hamur, bol baharatlı kıyma ve taş fırın lezzeti.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "İnce çıtır hamur, dengeli baharat ve bol yeşillik.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Uzayan kaşar peyniriyle fırından yeni çıkmış lezzet.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Sucuk, kaşar, kavurma ve sebzelerin nefis uyumu.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Mevsimin taze sebzeleri, limon ve zeytinyağı.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Çıtır kadayıf, erimiş peynir ve tam kararında şerbet.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Soğuk, ferahlatıcı ve yemeklerin vazgeçilmezi.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Serinleten sade maden suyu.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 18,
+        "clientHeight": 18
+      }
+    ],
+    "checks": [
+      {
+        "name": "Menü araması",
+        "expected": "Kıymalı Pide eşleşmesi",
+        "actual": "1 kart",
+        "status": "PASS"
+      },
+      {
+        "name": "Kategori seçimi",
+        "expected": "aria-pressed=true",
+        "actual": "Tümü: true",
+        "status": "PASS"
+      },
+      {
+        "name": "Yatay taşma",
+        "expected": "document scrollWidth <= viewport",
+        "actual": "320 / 320",
+        "status": "PASS"
+      }
+    ],
+    "pageErrors": [],
+    "screenshot": "playwright-320x560.png"
+  },
+  {
+    "kind": "Playwright emülasyonu",
+    "viewport": {
+      "width": 320,
+      "height": 720
+    },
+    "title": "Taş Fırın | Pide & Lahmacun",
+    "screen": {
+      "width": 320,
+      "height": 720
+    },
+    "document": {
+      "clientWidth": 320,
+      "scrollWidth": 320
+    },
+    "categories": [
+      {
+        "text": "Tümü",
+        "x": 15,
+        "y": 1206.453125,
+        "width": 91.328125,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Pide",
+        "x": 114.328125,
+        "y": 1206.453125,
+        "width": 91.328125,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Lahmacun",
+        "x": 213.65625,
+        "y": 1206.453125,
+        "width": 91.34375,
+        "height": 46,
+        "scrollWidth": 89,
+        "clientWidth": 89
+      },
+      {
+        "text": "Yan Ürün",
+        "x": 15,
+        "y": 1260.453125,
+        "width": 141,
+        "height": 46,
+        "scrollWidth": 139,
+        "clientWidth": 139
+      },
+      {
+        "text": "İçecek",
+        "x": 164,
+        "y": 1260.453125,
+        "width": 141,
+        "height": 46,
+        "scrollWidth": 139,
+        "clientWidth": 139
+      }
+    ],
+    "categoryCount": 5,
+    "categoryRows": 2,
+    "filterScrollWidth": 290,
+    "filterClientWidth": 290,
+    "products": 8,
+    "descriptions": [
+      {
+        "text": "İncecik hamur, bol baharatlı kıyma ve taş fırın lezzeti.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "İnce çıtır hamur, dengeli baharat ve bol yeşillik.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Uzayan kaşar peyniriyle fırından yeni çıkmış lezzet.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Sucuk, kaşar, kavurma ve sebzelerin nefis uyumu.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Mevsimin taze sebzeleri, limon ve zeytinyağı.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Çıtır kadayıf, erimiş peynir ve tam kararında şerbet.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Soğuk, ferahlatıcı ve yemeklerin vazgeçilmezi.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 36,
+        "clientHeight": 36
+      },
+      {
+        "text": "Serinleten sade maden suyu.",
+        "scrollWidth": 167,
+        "clientWidth": 167,
+        "scrollHeight": 18,
+        "clientHeight": 18
+      }
+    ],
+    "checks": [
+      {
+        "name": "Menü araması",
+        "expected": "Kıymalı Pide eşleşmesi",
+        "actual": "1 kart",
+        "status": "PASS"
+      },
+      {
+        "name": "Kategori seçimi",
+        "expected": "aria-pressed=true",
+        "actual": "Tümü: true",
+        "status": "PASS"
+      },
+      {
+        "name": "Yatay taşma",
+        "expected": "document scrollWidth <= viewport",
+        "actual": "320 / 320",
+        "status": "PASS"
+      }
+    ],
+    "pageErrors": [],
+    "screenshot": "playwright-320x720.png"
+  },
+  {
+    "kind": "Playwright emülasyonu",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "title": "Taş Fırın | Pide & Lahmacun",
+    "screen": {
+      "width": 390,
+      "height": 844
+    },
+    "document": {
+      "clientWidth": 390,
+      "scrollWidth": 390
+    },
+    "categories": [
+      {
+        "text": "Tümü",
+        "x": 15,
+        "y": 1165.390625,
+        "width": 114.65625,
+        "height": 46,
+        "scrollWidth": 113,
+        "clientWidth": 113
+      },
+      {
+        "text": "Pide",
+        "x": 137.65625,
+        "y": 1165.390625,
+        "width": 114.671875,
+        "height": 46,
+        "scrollWidth": 113,
+        "clientWidth": 113
+      },
+      {
+        "text": "Lahmacun",
+        "x": 260.328125,
+        "y": 1165.390625,
+        "width": 114.65625,
+        "height": 46,
+        "scrollWidth": 113,
+        "clientWidth": 113
+      },
+      {
+        "text": "Yan Ürün",
+        "x": 15,
+        "y": 1219.390625,
+        "width": 175.984375,
+        "height": 46,
+        "scrollWidth": 174,
+        "clientWidth": 174
+      },
+      {
+        "text": "İçecek",
+        "x": 198.984375,
+        "y": 1219.390625,
+        "width": 176,
+        "height": 46,
+        "scrollWidth": 174,
+        "clientWidth": 174
+      }
+    ],
+    "categoryCount": 5,
+    "categoryRows": 2,
+    "filterScrollWidth": 360,
+    "filterClientWidth": 360,
+    "products": 8,
+    "descriptions": [
+      {
+        "text": "İncecik hamur, bol baharatlı kıyma ve taş fırın lezzeti.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "İnce çıtır hamur, dengeli baharat ve bol yeşillik.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Uzayan kaşar peyniriyle fırından yeni çıkmış lezzet.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Sucuk, kaşar, kavurma ve sebzelerin nefis uyumu.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Mevsimin taze sebzeleri, limon ve zeytinyağı.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Çıtır kadayıf, erimiş peynir ve tam kararında şerbet.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Soğuk, ferahlatıcı ve yemeklerin vazgeçilmezi.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 38,
+        "clientHeight": 38
+      },
+      {
+        "text": "Serinleten sade maden suyu.",
+        "scrollWidth": 196,
+        "clientWidth": 196,
+        "scrollHeight": 19,
+        "clientHeight": 19
+      }
+    ],
+    "checks": [
+      {
+        "name": "Menü araması",
+        "expected": "Kıymalı Pide eşleşmesi",
+        "actual": "1 kart",
+        "status": "PASS"
+      },
+      {
+        "name": "Kategori seçimi",
+        "expected": "aria-pressed=true",
+        "actual": "Tümü: true",
+        "status": "PASS"
+      },
+      {
+        "name": "Yatay taşma",
+        "expected": "document scrollWidth <= viewport",
+        "actual": "390 / 390",
+        "status": "PASS"
+      }
+    ],
+    "pageErrors": [],
+    "screenshot": "playwright-390x844.png"
+  }
+]

@@ -1,0 +1,22 @@
+import {execFileSync} from 'node:child_process';
+import {writeFile} from 'node:fs/promises';
+const ADB='C:/Android/Sdk/platform-tools/adb.exe';
+const OUT='C:/Users/PC/Documents/Codex/2026-11-14/codex-ta-f-r-n-g4/outputs/G419_Test_Kanitlari';
+const tabs=await (await fetch('http://127.0.0.1:9222/json')).json();
+const tab=tabs.find(t=>t.type==='page' && t.url.startsWith('http://127.0.0.1:4321/pideci-lahmacuncu-demo/panel'));
+if(!tab) throw new Error('Yerel Taş Fırın panel Chrome sekmesi bulunamadı.');
+const ws=new WebSocket(tab.webSocketDebuggerUrl);
+await new Promise((resolve,reject)=>{ws.onopen=resolve;ws.onerror=reject;setTimeout(()=>reject(new Error('CDP bağlantı zaman aşımı')),5000)});
+let seq=0; const pending=new Map();
+ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};
+async function cdp(method,params={}){const id=++seq;return await new Promise((resolve,reject)=>{pending.set(id,resolve);ws.send(JSON.stringify({id,method,params}));setTimeout(()=>reject(new Error(method+' timeout')),8000)})}
+const evalJs=async expression=>{const r=await cdp('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.error)throw Error(JSON.stringify(r.error));return r.result?.result?.value};
+const [deviceWidth,deviceHeight]=execFileSync(ADB,['shell','wm','size'],{encoding:'utf8'}).match(/(\d+)x(\d+)/).slice(1).map(Number);
+const device={width:deviceWidth,height:deviceHeight};
+const dpr=await evalJs('devicePixelRatio');
+const viewport=await evalJs('({width:innerWidth,height:innerHeight,dpr:devicePixelRatio,screen:{width:screen.width,height:screen.height}})');
+const snapshot=await evalJs(`(()=>({title:document.title,url:location.href,viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},body:document.body.innerText.slice(0,350),cards:[...document.querySelectorAll('.admin-mobile-product')].map(c=>({text:c.innerText.slice(0,100),rect:(()=>{const r=c.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}})()})),dialog:!!document.querySelector('[role=dialog]'),buttons:[...document.querySelectorAll('[role=dialog] button')].map(b=>({text:b.innerText.trim(),rect:(()=>{const r=b.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}})()}))}))()`);
+const initialPng=execFileSync(ADB,['exec-out','screencap','-p']);
+await writeFile(`${OUT}/android-panel-initial.png`,initialPng);
+console.log(JSON.stringify({device,viewport,dpr,snapshot,screenshot:'android-panel-initial.png'},null,2));
+ws.close();

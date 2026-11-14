@@ -1,0 +1,57 @@
+<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G4.1.9 Android Test Raporu</title><style>body{font:16px system-ui;max-width:980px;margin:32px auto;padding:0 18px;color:#28231f}table{border-collapse:collapse}td,th{padding:9px 14px;border:1px solid #ddd}img{max-width:320px;border:1px solid #ddd;margin:8px}pre{white-space:pre-wrap;background:#f6f3ef;padding:16px}</style><h1>G4.1.9 Android Test Raporu</h1><p><b>Gerçek cihaz:</b> Kısmi — panel İptal akışı, klavye, müşteri kategorisi ve arama fiziksel telefonda denendi.</p><p><b>Cihaz:</b> 26012RN62Y, Android 16, Chrome 156.0.8078.79, fiziksel 1080x2396 px / 450 dpi; CSS 384x737 (Chrome viewport); screen 384x852; DPR 2.8125.</p><h2>Playwright emülasyonu</h2><table><tr><th>Viewport</th><th>Kategori</th><th>Ürün</th><th>Durum</th></tr><tr><td>320×560</td><td>5 / 2 satır</td><td>8</td><td>PASS</td></tr><tr><td>320×720</td><td>5 / 2 satır</td><td>8</td><td>PASS</td></tr><tr><td>390×844</td><td>5 / 2 satır</td><td>8</td><td>PASS</td></tr></table><h2>Gerçek telefon kanıtları</h2><figure><figcaption>android-panel-initial.png</figcaption><img src="G419_Test_Kanitlari/android-panel-initial.png" alt="Gerçek Android android-panel-initial.png"></figure><figure><figcaption>android-panel-products.png</figcaption><img src="G419_Test_Kanitlari/android-panel-products.png" alt="Gerçek Android android-panel-products.png"></figure><figure><figcaption>android-panel-editor-keyboard.png</figcaption><img src="G419_Test_Kanitlari/android-panel-editor-keyboard.png" alt="Gerçek Android android-panel-editor-keyboard.png"></figure><figure><figcaption>android-panel-keyboard-hidden.png</figcaption><img src="G419_Test_Kanitlari/android-panel-keyboard-hidden.png" alt="Gerçek Android android-panel-keyboard-hidden.png"></figure><figure><figcaption>android-panel-test-edit.png</figcaption><img src="G419_Test_Kanitlari/android-panel-test-edit.png" alt="Gerçek Android android-panel-test-edit.png"></figure><figure><figcaption>android-panel-cancel-confirm.png</figcaption><img src="G419_Test_Kanitlari/android-panel-cancel-confirm.png" alt="Gerçek Android android-panel-cancel-confirm.png"></figure><figure><figcaption>android-panel-cancelled.png</figcaption><img src="G419_Test_Kanitlari/android-panel-cancelled.png" alt="Gerçek Android android-panel-cancelled.png"></figure><figure><figcaption>android-panel-editor-keyboard.png</figcaption><img src="G419_Test_Kanitlari/android-panel-editor-keyboard.png" alt="Gerçek Android android-panel-editor-keyboard.png"></figure><figure><figcaption>android-panel-editor.png</figcaption><img src="G419_Test_Kanitlari/android-panel-editor.png" alt="Gerçek Android android-panel-editor.png"></figure><figure><figcaption>android-storefront-menu.png</figcaption><img src="G419_Test_Kanitlari/android-storefront-menu.png" alt="Gerçek Android android-storefront-menu.png"></figure><figure><figcaption>android-storefront-pide.png</figcaption><img src="G419_Test_Kanitlari/android-storefront-pide.png" alt="Gerçek Android android-storefront-pide.png"></figure><figure><figcaption>android-storefront-search.png</figcaption><img src="G419_Test_Kanitlari/android-storefront-search.png" alt="Gerçek Android android-storefront-search.png"></figure><figure><figcaption>android-storefront-menu.png</figcaption><img src="G419_Test_Kanitlari/android-storefront-menu.png" alt="Gerçek Android android-storefront-menu.png"></figure><h2>Playwright görüntüleri</h2><figure><figcaption>320×560</figcaption><img src="G419_Test_Kanitlari/playwright-320x560.png" alt="Playwright 320x560"></figure><figure><figcaption>320×720</figcaption><img src="G419_Test_Kanitlari/playwright-320x720.png" alt="Playwright 320x720"></figure><figure><figcaption>390×844</figcaption><img src="G419_Test_Kanitlari/playwright-390x844.png" alt="Playwright 390x844"></figure><h2>Durum notu</h2><pre># G4.1.9 Android Test Raporu
+
+## Ortam
+
+- Proje: `C:\Users\PC\TasFirin-G418-Test`
+- Sunucu: `http://127.0.0.1:4321/pideci-lahmacuncu-demo/`
+- Telefon: 26012RN62Y, Android 16, Chrome 156.0.8078.79
+- Fiziksel ekran: 1080x2396, 450 dpi
+- CSS viewport: 384x737 (Chrome viewport); screen 384x852; DPR 2.8125
+
+## Playwright emülasyonu
+
+| Viewport | Kategori | Ürün | Sonuç |
+|---|---:|---:|---|
+| 320×560 | 5 (2 satır) | 8 | PASS |
+| 320×720 | 5 (2 satır) | 8 | PASS |
+| 390×844 | 5 (2 satır) | 8 | PASS |
+
+Arama ve kategori seçimi üç viewport’ta PASS. 5 filtre düğmesi 3+2 görünümde. Yatay taşma yok; ürün açıklamalarında emülasyonda taşma görülmedi.
+
+## Gerçek Android
+
+**Sonuç kısmi.** ADB cihazı 26012RN62Y, Android 16, Chrome 156.0.8078.79; fiziksel 1080x2396 px / 450 dpi. 384x737 (Chrome viewport); screen 384x852; DPR 2.8125. Panel listesi ve editör açıldı. Klavye açıldı/kapatıldı. Ada TEST ekleyip İptal ettim; uyarı onayından sonra ürün özgün ada döndü. Kaydet/İptal görünür ve çakışmıyor. Müşteri sayfasında 5 filtre düğmesi 3+2 dizildi; Pide dokunması ve araması 3 ürün verdi.
+
+Aşağı kaydırarak porsiyon/ekstra alanlarını kontrol etme, kontrollü kaydetme, uzun isim, 7/8 kategori testleri BELİRSİZ. Fiziksel cihaz sonuçları emülasyonla birleştirilmedi.
+
+## Kategori senaryoları
+
+- 5 filtre düğmesi (Tümü dahil): Gerçek telefon ve Playwright’ta Tümü dahil 5 filtre düğmesi, 3+2 satır.
+- 7 kategori: BELİRSİZ: izole senaryo çalıştırılmadı.
+- 8 kategori: BELİRSİZ: izole senaryo çalıştırılmadı.
+
+## Güvenlik ve kapsam
+
+- Site kaynak dosyaları değiştirilmedi; build ve proje testleri çalıştırılmadı.
+- Fiziksel ekran çözünürlüğü değiştirilmedi. GitHub’a yükleme yapılmadı.
+- Tüm Android PNG kanıtları ADB pull ile alındı; dosya başına Windows görüntü çözücüsüyle 1080×2396 olarak açıldığı doğrulandı.
+
+## Kanıt dosyaları
+
+- `G419_Test_Kanitlari/android-panel-initial.png`
+- `G419_Test_Kanitlari/android-panel-products.png`
+- `G419_Test_Kanitlari/android-panel-editor-keyboard.png`
+- `G419_Test_Kanitlari/android-panel-keyboard-hidden.png`
+- `G419_Test_Kanitlari/android-panel-test-edit.png`
+- `G419_Test_Kanitlari/android-panel-cancel-confirm.png`
+- `G419_Test_Kanitlari/android-panel-cancelled.png`
+- `G419_Test_Kanitlari/android-panel-editor-keyboard.png`
+- `G419_Test_Kanitlari/android-panel-editor.png`
+- `G419_Test_Kanitlari/android-storefront-menu.png`
+- `G419_Test_Kanitlari/android-storefront-pide.png`
+- `G419_Test_Kanitlari/android-storefront-search.png`
+- `G419_Test_Kanitlari/android-storefront-menu.png`
+- `G419_Test_Kanitlari/playwright-320x560.png`
+- `G419_Test_Kanitlari/playwright-320x720.png`
+- `G419_Test_Kanitlari/playwright-390x844.png`
+</pre></html>
