@@ -297,7 +297,7 @@ export default function AdminPanel() {
       }
       if(generation!==uploadGeneration.current)return;
       setEditing(p=>p?{...p,image}:p);
-      setUploadState(LIVE?'✓ Fotoğraf sunucuya yüklendi. Ürünü kaydet düğmesine basın.':'✓ Yeni fotoğraf işlendi. Önizlemeyi kontrol edip Ürünü kaydet düğmesine basın.');
+      setUploadState(LIVE?'✓ Yeni fotoğraf sunucuya yüklendi. Ürünü kaydet düğmesine basın.':'✓ Yeni fotoğraf işlendi. Önizlemeyi kontrol edip Ürünü kaydet düğmesine basın.');
       info('Yeni fotoğraf hazırlandı; ürüne uygulamak için kaydedin.');
     }catch(e){
       if(generation!==uploadGeneration.current)return;
