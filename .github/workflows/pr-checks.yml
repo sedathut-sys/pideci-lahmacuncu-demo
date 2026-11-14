@@ -1,0 +1,28 @@
+name: Pull Request — Güvenli Build Kontrolü
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Dependencies
+        run: npm install --no-audit --no-fund
+      - name: Core tests
+        run: npm test
+      - name: Source quality
+        run: npm run quality
+      - name: Astro production build
+        run: npm run build
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+      - name: Pages output
+        run: node scripts/check-pages-output.mjs
