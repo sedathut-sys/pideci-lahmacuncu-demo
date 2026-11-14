@@ -23,12 +23,19 @@ export const site: SiteSettings = {
   notice: 'Bu bir şablon demosudur. Fiyatlar örnektir.',
   categories: ['Pide', 'Lahmacun', 'Yan Ürün', 'İçecek']
 };
-export const SITE_KEY = 'mahalle-yemek-site-demo-v2';
+export const SITE_KEY = 'tas-firin:pideci-lahmacuncu-demo:settings:v3';
+const LEGACY_SITE_KEY = 'mahalle-yemek-site-demo-v2';
+// Yalnız bu eski GitHub Pages demosunda eski veriyi bir defa içeri al.
+const canMigrateLegacy = () => typeof window !== 'undefined' && window.location.hostname === 'sedathut-sys.github.io' && window.location.pathname.startsWith('/pideci-lahmacuncu-demo/');
 export const SITE_CHANGED = 'mahalle-yemek-site-changed';
 export function readDemoSettings(): SiteSettings {
   if(typeof window==='undefined') return site;
   try {
-    const raw=window.localStorage.getItem(SITE_KEY);
+    let raw=window.localStorage.getItem(SITE_KEY);
+    if(raw===null && canMigrateLegacy()) {
+      const legacy=window.localStorage.getItem(LEGACY_SITE_KEY);
+      if(legacy){const checked=JSON.parse(legacy);if(checked && typeof checked==='object' && !Array.isArray(checked)) {window.localStorage.setItem(SITE_KEY,legacy);raw=legacy;}}
+    }
     return raw?{...site,...JSON.parse(raw)}:site;
   }catch{return site;}
 }

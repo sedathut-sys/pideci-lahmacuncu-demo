@@ -6,6 +6,7 @@ export function validateCategories(input) {
   const names = input.map(canonical);
   if (names.some(x => x.length < 2 || x.length > 36 || /[<>\x00-\x1f]/.test(x))) throw new Error('Kategori adları 2–36 karakter olmalıdır.');
   const fold = name => name.toLocaleLowerCase('tr-TR');
+  if (names.some(name=>fold(name)==='tümü'))throw new Error('“Tümü” sistem filtresidir; kategori adı olarak kullanılamaz.');
   if (new Set(names.map(fold)).size !== names.length) throw new Error('Aynı kategori iki kez eklenemez.');
   return names;
 }

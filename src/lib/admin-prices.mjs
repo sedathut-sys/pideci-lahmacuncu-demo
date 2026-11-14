@@ -19,7 +19,4 @@ export function removeVariant(product,index) {
   return syncDisplayPrice({...product,variants});
 }
 
-/** Sayı alanındaki 0150 / 000.5 gibi baştaki gereksiz sıfırları temizler. */
-export function normalizePriceInput(value) {
-  return String(value).replace(/^0+(?=\d)/, '');
-}
+export {normalizePriceInput} from './price-rules.mjs';

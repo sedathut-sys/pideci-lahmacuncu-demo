@@ -1,8 +1,9 @@
+import {isValidUnitPrice} from './price-rules.mjs';
 /** Sipariş matematiğinin tek kaynağı. Tarayıcı, demo önizlemesi ve Node testleri kullanır. */
 export const MAX_LINE_QUANTITY = 50;
 export const money = amount => new Intl.NumberFormat('tr-TR', {style:'currency', currency:'TRY'}).format(amount);
 const kurus = value => Math.round(value * 100);
-const positivePrice = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1000000;
+const positivePrice = isValidUnitPrice;
 const normalize = (text, max) => String(text ?? '').replace(/\s+/g,' ').trim().slice(0, max);
 export const isValidWhatsApp = number => typeof number === 'string' && /^[1-9]\d{9,14}$/.test(number);
 
