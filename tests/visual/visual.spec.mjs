@@ -76,6 +76,10 @@ test('G1 müşteri: ana karşılama alanı', async ({ page }, info) => {
   await expect(page.locator('.product-card')).toHaveCount(8);
   await stablePage(page);
   await loadedImages(page, '.hero img');
+  // Yalnızca özel negatif kabul testi: görsel bozulmanın algılandığını ispatlar.
+  if (process.env.G1_NEGATIVE_TEST === '1') {
+    await page.addStyleTag({ content: '.hero{background:#03112f!important}.hero-copy{filter:grayscale(1)!important}' });
+  }
   await compareOrCapture(page.locator('.hero'), info, 'musteri-ana-alan.png');
 });
 
