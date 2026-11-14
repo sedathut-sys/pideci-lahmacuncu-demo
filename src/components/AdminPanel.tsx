@@ -3,11 +3,21 @@ import { useEffect, useMemo, useState } from 'react';
 import { initialProducts,readDemoProducts,writeDemoProducts,type Product, type ProductExtra, type ProductVariant } from '../data/products';
 import { site,brandInitials,readDemoSettings,writeDemoSettings,type SiteSettings } from '../data/config';
 import {addCategory,removeCategory,validateCategories,assertCategoriesUsed} from '../lib/admin-core.mjs';
-import {displayedPrice,withDisplayedPrice,syncDisplayPrice,addVariant,removeVariant} from '../lib/admin-prices.mjs';
+import {displayedPrice,withDisplayedPrice,syncDisplayPrice,addVariant,removeVariant,normalizePriceInput} from '../lib/admin-prices.mjs';
 import {demoImageData} from '../lib/demo-image.mjs';
 
 const LIVE = import.meta.env.PUBLIC_DATA_MODE === 'live';
-const IMAGES=['pide-kiymali','pide-kasarli','pide-karisik','lahmacun','salata','kunefe','ayran','soda'].map(x=>`/images/${x}.svg`);
+const IMAGE_OPTIONS=[
+  {file:'pide-kiymali',label:'Kıymalı Pide'},
+  {file:'pide-kasarli',label:'Kaşarlı Pide'},
+  {file:'pide-karisik',label:'Karışık Pide'},
+  {file:'lahmacun',label:'Antep Usulü Lahmacun'},
+  {file:'salata',label:'Çoban Salata'},
+  {file:'kunefe',label:'Künefe'},
+  {file:'ayran',label:'Ayran'},
+  {file:'soda',label:'Maden Suyu'}
+].map(({file,label})=>({image:`/images/${file}.svg`,label}));
+const IMAGES=IMAGE_OPTIONS.map(({image})=>image);
 const money=(n:number)=>new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n);
 function emptyProduct(category:string):Product {return {id:'',name:'',description:'',category,price:0,image:IMAGES[0],available:true,badge:'',variants:[],extras:[]};}
 async function responseJson(response:Response) {
@@ -36,6 +46,7 @@ export default function AdminPanel() {
   const [newCategory,setNewCategory]=useState('');
   const [busy,setBusy]=useState(false);
   const [uploadState,setUploadState]=useState('');
+  const [keyboardViewport,setKeyboardViewport]=useState<{height:number;top:number}|null>(null);
   const [notice,setNotice]=useState('');
   const [error,setError]=useState('');
 
@@ -64,6 +75,33 @@ export default function AdminPanel() {
     function onKey(e:KeyboardEvent){if(e.key==='Escape')setEditing(null);}
     window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
   },[editing]);
+  // Android/iOS ekran klavyesi bazen yalnızca visualViewport'u küçültür.
+  useEffect(()=>{
+    if(!editing){setKeyboardViewport(null);return;}
+    const viewport=window.visualViewport;
+    if(!viewport)return;
+    function update(){
+      const focused=document.activeElement;
+      const formFocused=focused instanceof HTMLElement && Boolean(focused.closest('.admin-dialog-large'));
+      const obscured=window.innerHeight-viewport!.height-viewport!.offsetTop;
+      const keyboardOpen=window.innerWidth<=800 && formFocused && obscured>120;
+      const next=keyboardOpen?{height:Math.round(viewport!.height),top:Math.round(viewport!.offsetTop)}:null;
+      setKeyboardViewport(prev=>prev?.height===next?.height&&prev?.top===next?.top?prev:next);
+    }
+    viewport.addEventListener('resize',update);
+    viewport.addEventListener('scroll',update);
+    window.addEventListener('resize',update);
+    document.addEventListener('focusin',update);
+    document.addEventListener('focusout',update);
+    update();
+    return ()=>{
+      viewport.removeEventListener('resize',update);
+      viewport.removeEventListener('scroll',update);
+      window.removeEventListener('resize',update);
+      document.removeEventListener('focusin',update);
+      document.removeEventListener('focusout',update);
+    };
+  },[editing!==null]);
   const matches=useMemo(()=>products.filter(p=>`${p.name} ${p.category}`.toLocaleLowerCase('tr-TR').includes(filter.toLocaleLowerCase('tr-TR'))),[products,filter]);
 
   async function api(method:string,path:string,data?:any) {
@@ -178,7 +216,7 @@ export default function AdminPanel() {
   async function uploadImage(file:File){
     setUploadState('Fotoğraf işleniyor…');
     if(!LIVE){
-      setBusy(true);try{const image=await demoImageData(file);setEditing(p=>p?{...p,image}:p);setUploadState('✓ Fotoğraf hazır. Ürünü kaydet düğmesine basın.');info('Görsel hazırlandı. Ürünü kaydet düğmesine basın.');}
+      setBusy(true);try{const image=await demoImageData(file);setEditing(p=>p?{...p,image}:p);setUploadState('✓ Yeni fotoğraf işlendi. Önizlemeyi kontrol edip Ürünü kaydet düğmesine basın.');info('Yeni fotoğraf hazırlandı; kalıcı olması için ürünü kaydedin.');}
       catch(e){setUploadState(e instanceof Error?e.message:'Fotoğraf yüklenemedi.');warn(e);}finally{setBusy(false);}return;
     }
     if(file.size>2*1024*1024){warn(new Error('En fazla 2 MB görsel yükleyebilirsiniz.'));return;}
@@ -186,7 +224,7 @@ export default function AdminPanel() {
     try{
       const res=await fetch('/api/admin/uploads',{method:'POST',credentials:'same-origin',headers:{'content-type':file.type,'x-csrf-token':csrf},body:file});
       const data=await responseJson(res);
-      setEditing(p=>p?{...p,image:data.url}:p);setUploadState('✓ Fotoğraf yüklendi. Ürünü kaydet düğmesine basın.');info('Görsel yüklendi. Kaydetmeyi unutmayın.');
+      setEditing(p=>p?{...p,image:data.url}:p);setUploadState('✓ Yeni fotoğraf sunucuya yüklendi. Ürünü kaydet düğmesine basın.');info('Yeni fotoğraf yüklendi. Ürüne uygulamak için kaydedin.');
     }catch(e){warn(e);}finally{setBusy(false);}
   }
   function setOption(kind:'variants'|'extras',index:number,key:'label'|'price',val:string){
@@ -240,7 +278,7 @@ export default function AdminPanel() {
               </div>
               <div className="admin-mobile-product-actions" role="group" aria-label={`${p.name} yönetimi`}>
                 <button disabled={busy} className={`status-pill ${p.available?'on':'off'}`} type="button" onClick={()=>toggleProduct(p)} aria-label={`${p.name}: ${p.available?'görünür, gizlemek için tıkla':'gizli, göstermek için tıkla'}`}>{p.available?'● Görünür':'○ Gizli'}</button>
-                <button className="edit-button" type="button" onClick={()=>{setIsNew(false);setEditing(structuredClone(p));}} aria-label={`${p.name} düzenle`}>Düzenle</button>
+                <button className="edit-button" type="button" onClick={()=>{setIsNew(false);setUploadState('');setEditing(syncDisplayPrice(structuredClone(p)));}} aria-label={`${p.name} düzenle`}>Düzenle</button>
                 <button className="admin-danger-btn" type="button" disabled={busy} onClick={()=>deleteProduct(p)} aria-label={`${p.name} sil`}>Sil</button>
               </div>
             </article>)}
@@ -268,13 +306,13 @@ export default function AdminPanel() {
         <div className="admin-settings-footer"><button disabled={busy} type="button" className="admin-create" onClick={saveSettings}>{busy?'Kaydediliyor…':'Ayarları kaydet'}</button></div>
       </section>}
     </main>
-    {editing&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setEditing(null);}}><section className="admin-dialog admin-dialog-large" role="dialog" aria-modal="true" aria-label={isNew?'Ürün oluştur':'Ürün düzenle'}><div className="admin-dialog-top"><div><p className="overline">MENÜ YÖNETİMİ</p><h2>{isNew?'Yeni ürün':'Ürün düzenle'}</h2></div><button className="close-icon" aria-label="Kapat" onClick={()=>setEditing(null)} type="button">✕</button></div>
+    {editing&&<div className={`modal-backdrop${keyboardViewport?' admin-backdrop-keyboard':''}`} style={keyboardViewport?{top:keyboardViewport.top,bottom:'auto',height:keyboardViewport.height}:undefined} onMouseDown={e=>{if(e.target===e.currentTarget)setEditing(null);}}><section className="admin-dialog admin-dialog-large" role="dialog" aria-modal="true" aria-label={isNew?'Ürün oluştur':'Ürün düzenle'}><div className="admin-dialog-top"><div><p className="overline">MENÜ YÖNETİMİ</p><h2>{isNew?'Yeni ürün':'Ürün düzenle'}</h2></div><div className="admin-header-actions"><button type="button" className="admin-header-save" disabled={busy} onClick={saveProduct} aria-label="Ürünü kaydet">Kaydet</button><button className="close-icon" aria-label="Kapat" onClick={()=>setEditing(null)} type="button">✕</button></div></div>
       <div className="admin-form"><p className="admin-menu-price-preview" role="status">Müşterinin gördüğü başlangıç fiyatı <strong>{money(displayedPrice(editing))}</strong></p><p className="admin-draft-hint">Değişiklikler yalnızca <b>Ürünü kaydet</b> düğmesine bastığınızda uygulanır.</p><label>Ürün adı *<input autoFocus maxLength={80} value={editing.name} onChange={e=>setEditing({...editing,name:e.target.value})} placeholder="Kıymalı Pide"/></label>
         <label>Kategori<select value={editing.category} onChange={e=>setEditing({...editing,category:e.target.value as Product['category']})}>{settings.categories.map(cat=><option key={cat}>{cat}</option>)}</select></label>
-        <label className="admin-primary-price">Menüde görünen satış fiyatı (₺) *<input aria-label="Menüde görünen satış fiyatı" type="number" min="0" step="0.01" max="1000000" value={displayedPrice(editing)} onChange={e=>setEditing(withDisplayedPrice(editing,Number(e.target.value)))}/><small className="admin-price-help">{editing.variants?.length ? ('Bu fiyat “' + (editing.variants[0].label||'ilk porsiyon') + '” ile birlikte güncellenir. Diğer porsiyonların fiyatı ayrı değişir.') : 'Müşterinin menüde gördüğü fiyat budur.'}</small></label>
+        <label className="admin-primary-price">Menüde görünen satış fiyatı (₺) *<input aria-label="Menüde görünen satış fiyatı" type="number" min="0" step="0.01" max="1000000" value={displayedPrice(editing)} onChange={e=>{const input=e.currentTarget;const normalized=normalizePriceInput(input.value);if(input.value!==normalized)input.value=normalized;setEditing(withDisplayedPrice(editing,Number(normalized)));}} onBlur={e=>{e.currentTarget.value=String(displayedPrice(editing));}}/><small className="admin-price-help">{editing.variants?.length ? ('Bu fiyat “' + (editing.variants[0].label||'ilk porsiyon') + '” ile birlikte güncellenir. Diğer porsiyonların fiyatı ayrı değişir.') : 'Müşterinin menüde gördüğü fiyat budur.'}</small></label>
         <label>Etiket / rozet<input value={editing.badge||''} maxLength={35} onChange={e=>setEditing({...editing,badge:e.target.value})} placeholder="Çok sevilen"/></label>
         <label>Açıklama<textarea rows={3} maxLength={300} value={editing.description} onChange={e=>setEditing({...editing,description:e.target.value})}/></label>
-        <label>Fotoğraf seç<select value={IMAGES.includes(editing.image)?editing.image:'custom'} onChange={e=>setEditing({...editing,image:e.target.value})}>{!IMAGES.includes(editing.image)&&<option value="custom">Yüklenen görsel</option>}{IMAGES.map(img=><option key={img} value={img}>{img.split('/').pop()}</option>)}</select></label>
+        <label>Fotoğraf seç<select value={IMAGES.includes(editing.image)?editing.image:'custom'} onChange={e=>{if(e.target.value==='custom')return;setEditing({...editing,image:e.target.value});setUploadState('✓ Hazır menü görseli seçildi. Ürünü kaydet düğmesine basın.');setError('');}}>{!IMAGES.includes(editing.image)&&<option value="custom">Yüklenen fotoğraf (mevcut)</option>}{IMAGE_OPTIONS.map(({image,label})=><option key={image} value={image}>{label}</option>)}</select></label>
         <label>Yeni fotoğraf yükle<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>{const file=e.target.files?.[0];if(file)void uploadImage(file);e.target.value='';}}/><small>{LIVE?'En fazla 2 MB · R2 üzerinde saklanır':'2 MB görsel seçilebilir; demo için küçültülerek bu tarayıcıda saklanır.'}</small></label>{uploadState&&<p className="admin-upload-status" role="status">{uploadState}</p>}{error&&<p className="form-error" role="alert">{error}</p>}
         <img className="admin-edit-preview" src={publicUrl(editing.image)} alt={`${editing.name||'Ürün'} görseli`}/>
         <fieldset className="admin-options-field"><legend>Porsiyon / boy seçenekleri</legend><p>İlk porsiyonun fiyatı yukarıdaki satış fiyatına bağlıdır. Diğer porsiyonları burada bağımsız düzenleyin.</p>{(editing.variants||[]).map((v,i)=><div className="admin-option-row" key={`v${i}`}><input aria-label={`${i+1}. porsiyon adı`} value={v.label} placeholder="Standart" onChange={e=>setOption('variants',i,'label',e.target.value)}/>{i===0?<span className="admin-first-variant-price">{money(displayedPrice(editing))}<small>Üstteki fiyat</small></span>:<input aria-label="Diğer porsiyon fiyatı" type="number" min="0" step="0.01" value={v.price} onChange={e=>setOption('variants',i,'price',e.target.value)}/>}<button type="button" onClick={()=>removeOption('variants',i)} aria-label="Porsiyonu sil">✕</button></div>)}<button type="button" className="admin-add-option" onClick={()=>addOption('variants')}>+ Porsiyon ekle</button></fieldset>
