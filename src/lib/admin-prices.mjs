@@ -18,3 +18,8 @@ export function removeVariant(product,index) {
   const variants=(product.variants||[]).filter((_,i)=>i!==index);
   return syncDisplayPrice({...product,variants});
 }
+
+/** Sayı alanındaki 0150 / 000.5 gibi baştaki gereksiz sıfırları temizler. */
+export function normalizePriceInput(value) {
+  return String(value).replace(/^0+(?=\d)/, '');
+}
