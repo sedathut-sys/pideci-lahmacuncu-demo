@@ -311,3 +311,11 @@
   .admin-mobile-product-actions{gap:5px}
   .admin-mobile-product-actions button{font-size:12px;padding:8px 3px}
 }
+
+
+/* AŞAMA 5.10.9 — 320–360 px: başlık ile geri dönüş düğmesi çakışmaz */
+@media(max-width:360px){
+  .admin-top{flex-direction:column;align-items:stretch;gap:5px}
+  .admin-top-actions{justify-content:flex-end}
+  .admin-top h1{overflow-wrap:anywhere}
+}
