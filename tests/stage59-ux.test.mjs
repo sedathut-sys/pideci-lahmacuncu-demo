@@ -23,5 +23,5 @@ test('Mobil ürün metinleri ve fiyat altı bilgisi okunurluğu artırıldı',()
  assert.match(css,/\.product-info p\{font-size:13px/);
 });
 test('Panel porsiyon-fiyat önceliğini açıklıyor',()=>{
- assert.match(admin,/porsiyon fiyatı geçerli/);assert.match(admin,/Değişiklikler yalnızca/);
+ assert.match(admin,/Menüde görünen satış fiyatı/);assert.match(admin,/Değişiklikler yalnızca/);
 });
