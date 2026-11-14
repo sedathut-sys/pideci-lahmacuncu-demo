@@ -14,7 +14,9 @@ export type Product = {
   extras?: ProductExtra[];
 };
 
-export const STORAGE_KEY = 'mahalle-pide-products-demo-v1';
+export const STORAGE_KEY = 'tas-firin:pideci-lahmacuncu-demo:products:v2';
+const LEGACY_STORAGE_KEY = 'mahalle-pide-products-demo-v1';
+const canMigrateLegacy = () => typeof window !== 'undefined' && window.location.hostname === 'sedathut-sys.github.io' && window.location.pathname.startsWith('/pideci-lahmacuncu-demo/');
 export const CHANGE_EVENT = 'mahalle-pide-products-changed';
 
 // Tüm fiyatlar ve ürünler DEMODUR; gerçek menüye göre değiştirilmelidir.
@@ -78,7 +80,11 @@ export function isValidProduct(value: unknown): value is Product {
 export function readDemoProducts(): Product[] {
   if (typeof window === 'undefined') return initialProducts;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    let raw = window.localStorage.getItem(STORAGE_KEY);
+    if(raw === null && canMigrateLegacy()) {
+      const legacy=window.localStorage.getItem(LEGACY_STORAGE_KEY);
+      if(legacy){const old: unknown=JSON.parse(legacy);if(Array.isArray(old)&&old.every(isValidProduct)) {window.localStorage.setItem(STORAGE_KEY,legacy);raw=legacy;}}
+    }
     if (!raw) return initialProducts;
     const data: unknown = JSON.parse(raw);
     return Array.isArray(data) && data.every(isValidProduct) ? data : initialProducts;
