@@ -1,0 +1,133 @@
+name: G4.1 — SSR İlk Yükleme ve Çoklu Sekme Veri Tutarlılığı
+
+on:
+  pull_request:
+    branches:
+      - feature/playwright-g4-mobil-menu-arama-gezinme-20261114
+
+permissions:
+  contents: read
+
+jobs:
+  g41-initial-sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Yalnız G4.1 test dalını indir
+        uses: actions/checkout@v4
+
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Bağımlılıkları kur
+        run: npm install --no-audit --no-fund
+
+      - name: Chromium bağımlılıkları
+        run: npx playwright install --with-deps chromium
+
+      - name: Yalnızca yerel Taş Fırın demosunu derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+
+      - name: Kaynak kalite ve çekirdek Node testleri
+        run: |
+          npm test
+          npm run quality
+
+      - name: G4.1 ön tarama — 390 px için 18 senaryo (bulguları gizleme)
+        continue-on-error: true
+        run: npx playwright test --config=playwright.g41.config.mjs --project=mobil-390px --retries=0 --timeout=30000
+
+      - name: G4 ilk hızlı kabul — 390 px için 22 senaryo
+        run: npx playwright test --config=playwright.g4.config.mjs --project=mobil-390px --retries=0 --timeout=30000
+
+      - name: G1 onay kaydı ve 35 PNG bütünlük kontrolü
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          root=Path('tests/visual/__snapshots__')
+          files=sorted(root.rglob('*.png'))
+          assert len(files)==35, f'Expected exactly 35 approved screenshots, got {len(files)}'
+          digest=hashlib.sha256()
+          for file in files:
+              content=file.read_bytes()
+              assert content.startswith(b'\x89PNG\r\n\x1a\n'), str(file)
+              name='test-results/visual-baseline-candidates/'+file.relative_to(root).as_posix()
+              digest.update(name.encode()+b'\0'+len(content).to_bytes(8,'big')+content)
+          approved='ed93c886e685a6a0c168378e9004e1ffcbf07b194accae6ad00334bf3df61f40'
+          assert digest.hexdigest()==approved, 'Approved G1 references have changed!'
+          assert approved in Path('tests/visual/BASELINES_APPROVED.md').read_text()
+          print('PASS: 35 exact user-approved G1 images intact.')
+          PY
+
+      - name: Korunan 28 mobil fonksiyon testi
+        run: npx playwright test --config=playwright.config.mjs
+
+      - name: G1 onaylı 35 gerçek görsel karşılaştırması
+        env:
+          VISUAL_MODE: compare
+        run: npx playwright test --config=playwright.visual.config.mjs
+
+      - name: G8 hata sınıflandırma birim testleri
+        run: node --test tests/g8/collector.test.mjs
+
+      - name: G8 gerçek sayfa ve kontrollü sentetik negatif olaylar
+        run: npx playwright test --config=playwright.g8.config.mjs
+
+      - name: G2 onaylı 85 panel işlev testi
+        run: npx playwright test --config=playwright.g2.config.mjs
+
+      - name: G3 sipariş matematiği, limit, minimum tutar 11 birim testi
+        run: node --test tests/g3/order-core.test.mjs
+
+      - name: G3 sepet/sipariş tam matris — 18 senaryo × 5 profil
+        run: npx playwright test --config=playwright.g3.config.mjs
+
+      - name: G4 mobil menü arama kategori ve gezinme matrisi — 22 × 5
+        run: npx playwright test --config=playwright.g4.config.mjs
+
+      - name: G4.1 SSR hidratasyon ve iki sekme tam matris — 18 × 5
+        run: npx playwright test --config=playwright.g41.config.mjs --retries=0
+
+      - name: Türkçe G2/G3/G4/G4.1 raporları
+        if: always()
+        run: |
+          if test -f test-results/g2-results.json; then node scripts/g2-report.mjs; fi
+          if test -f test-results/g3-results.json; then node scripts/g3-report.mjs; fi
+          if test -f test-results/g4-results.json; then node scripts/g4-report.mjs; fi
+          if test -f test-results/g41-results.json; then node scripts/g41-report.mjs; fi
+
+      - name: G1 G2 G3 G4 G41 G8 rapor ve hata izleri
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g41-ssr-ilk-yukleme-iki-sekme-raporu
+          path: |
+            test-results/g41/
+            test-results/g41-results.json
+            test-results/g4/
+            test-results/g4-results.json
+            test-results/g3/
+            test-results/g3-results.json
+            test-results/g2/
+            test-results/g2-results.json
+            test-results/g8/
+            test-results/g8-results.json
+            test-results/visual/
+            test-results/visual-results.json
+            test-results/e2e/
+            playwright-report/g41/
+            playwright-report/g4/
+            playwright-report/g3/
+            playwright-report/g2/
+            playwright-report/g8/
+            playwright-report/visual/
+            playwright-report/index.html
+          retention-days: 14
+          if-no-files-found: warn
