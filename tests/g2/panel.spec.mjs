@@ -290,7 +290,7 @@ test('G2-17 tarayıcı veri izolasyonu: ikinci bağımsız oturum test verisini 
   await openPanel(page);
   await createProduct(page,{name:'G2 İZOLE KAYIT',price:'11'});
   await expect(page.locator('.admin-mobile-product')).toHaveCount(9);
-  const second=await browser.newContext();
+  const second=await browser.newContext({baseURL:'http://127.0.0.1:4321/pideci-lahmacuncu-demo/'});
   try{
     const isolated=await second.newPage();
     await openPanel(isolated);
