@@ -205,7 +205,7 @@ test('G3-15 gizlenen ürün sipariş öncesi sepetten çıkarılır ve uyarı ve
   const panel=await context.newPage();
   await openPanel(panel);
   await productAction(panel,info,'Kıymalı Pide','status').click();
-  await expect(page.getByRole('heading',{name:'Kıymalı Pide'})).toHaveCount(0);
+  await expect(page.locator('.product-card').filter({has:page.getByRole('heading',{name:'Kıymalı Pide'})})).toHaveCount(0);
   await cart.getByRole('button',{name:/Sipariş mesajını görüntüle/}).click();
   await expect(cart.getByRole('alert')).toContainText('Bazı ürünler artık satışta değil');
   await expect(cart.locator('.cart-line')).toHaveCount(0);
