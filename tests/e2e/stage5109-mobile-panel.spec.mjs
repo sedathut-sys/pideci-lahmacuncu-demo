@@ -6,7 +6,7 @@ async function noOverflow(page){
   expect(sizes.body,JSON.stringify(sizes)).toBeLessThanOrEqual(sizes.width+2);
 }
 async function capture(page,testInfo,label){
-  await testInfo.attach(`${testInfo.project.name}-5109-${label}.png`,{body:await page.screenshot({fullPage:true}),contentType:'image/png'});
+  await testInfo.attach(`${testInfo.project.name}-5109-${label}.png`,{body:await page.screenshot({fullPage:false}),contentType:'image/png'});
 }
 
 test('5.10.9: mobil kartlarda görünür/gizli filtre ve arama birlikte çalışır',async ({page},testInfo)=>{
@@ -16,6 +16,7 @@ test('5.10.9: mobil kartlarda görünür/gizli filtre ve arama birlikte çalış
   await expect(page.locator('.admin-mobile-count')).toHaveText('8 / 8 ürün gösteriliyor');
   await expect(page.getByRole('button',{name:'Tüm ürünler'})).toHaveAttribute('aria-pressed','true');
   await noOverflow(page);
+  await capture(page,testInfo,'panel-ilk-ekran');
   await page.getByRole('button',{name:'Gizli ürünler'}).click();
   await expect(cards).toHaveCount(0);
   await expect(page.locator('.admin-mobile-count')).toHaveText('0 / 8 ürün gösteriliyor');
@@ -74,6 +75,14 @@ test('5.10.9: değişiklik uyarısı, İptal ve Kaydet gerçek ürün düzenleme
 test('5.10.9: 320-430 px kompakt başlık ve kısa ekranda form düğmeleri erişilir',async ({page},testInfo)=>{
   await page.goto('./panel/');
   await expect(page.locator('.admin-mobile-product')).toHaveCount(8);
+  if(page.viewportSize().width<=360){
+    const heading=await page.locator('.admin-top h1').boundingBox();
+    const back=await page.locator('.admin-top-link').first().boundingBox();
+    expect(heading).not.toBeNull();
+    expect(back).not.toBeNull();
+    const overlaps=heading.x<back.x+back.width && heading.x+heading.width>back.x && heading.y<back.y+back.height && heading.y+heading.height>back.y;
+    expect(overlaps,'Başlık ve Siteye dön düğmesi çakışmamalı').toBe(false);
+  }
   const nav=page.locator('.admin-sidebar');
   const navBox=await nav.boundingBox();
   expect(navBox).not.toBeNull();
