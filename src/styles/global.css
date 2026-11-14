@@ -351,3 +351,18 @@
   /* 4, 7, 10... kategoride tek son düğme tam satıra yayılır. */
   .menu-controls .filters>.filter:nth-child(3n+1):last-child{grid-column:span 6}
 }
+
+
+/* G4.1.12 — #09/#13: 320–360 px ürün düzenleyici düğme oranları.
+   İptal daha dar; Ürünü kaydet tek satır ve en az 44px dokunma alanında. */
+@media(max-width:360px){
+  .admin-dialog-large .admin-dialog-footer > .admin-cancel{
+    flex:0 1 35%;
+    min-width:0;
+  }
+  .admin-dialog-large .admin-dialog-footer > .admin-create{
+    flex:1 1 65%;
+    min-width:0;
+    white-space:nowrap;
+  }
+}
