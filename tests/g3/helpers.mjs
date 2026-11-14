@@ -11,6 +11,14 @@ export async function choose(page,{
   qty=1,
 }={}){
   await page.getByRole('button',{name:name+' sepete ekle'}).click();
+  // Basit ürünler (porsiyon/ekstra yok) uygulamada diyalogsuz direkt eklenir.
+  const directProducts=new Set(['Ayran','Maden Suyu','Çoban Salata','Künefe']);
+  if(directProducts.has(name)){
+    expect(qty).toBe(1);
+    expect(extras).toHaveLength(0);
+    expect(variantIndex).toBe(0);
+    return null;
+  }
   const dialog=page.getByRole('dialog',{name:name+' seçenekleri'});
   await expect(dialog).toBeVisible();
   if(variantIndex){
@@ -24,6 +32,7 @@ export async function choose(page,{
 }
 export async function addToCart(page,options){
   const dialog=await choose(page,options);
+  if(!dialog)return; // React zaten doğrudan sepete ekledi.
   await dialog.getByRole('button',{name:/Sepete ekle/}).click();
   await expect(dialog).toHaveCount(0);
 }
@@ -36,7 +45,7 @@ export async function openCart(page){
   return cart;
 }
 export function line(cart,productName,option=''){
-  const rows=cart.locator('.cart-line').filter({has:cart.locator('h4').filter({hasText:productName})});
+  const rows=cart.locator('.cart-line').filter({hasText:productName});
   return option?rows.filter({hasText:option}):rows.first();
 }
 export async function pickup(cart,name='G3 Kontrol'){
