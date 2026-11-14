@@ -23,7 +23,7 @@ const screenshotOptions = {
 
 async function stablePage(page) {
   await page.addStyleTag({
-    content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important;scroll-behavior:auto!important}',
+    content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important;scroll-behavior:auto!important}.topbar{position:relative!important}.skip-link{display:none!important}',
   });
   await page.evaluate(async () => { await document.fonts.ready; });
 }
