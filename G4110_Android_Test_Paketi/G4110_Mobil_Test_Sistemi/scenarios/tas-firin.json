@@ -1,0 +1,26 @@
+{
+  "name": "Taş Fırın G4.1.10 güvenli mobil senaryosu",
+  "productName": "Kıymalı Pide",
+  "categoryNames": ["Tümü", "Pide", "Lahmacun", "Yan Ürün", "İçecek"],
+  "selectors": {
+    "productCards": ".admin-mobile-product",
+    "editButton": "button.edit-button",
+    "dialog": "[role=dialog]",
+    "form": ".admin-form",
+    "formFields": "input, textarea, select",
+    "options": ".admin-options-field",
+    "footer": ".admin-dialog-footer",
+    "save": ".admin-dialog-footer .admin-create",
+    "cancel": ".admin-dialog-footer .admin-cancel",
+    "filters": ".filters .filter",
+    "search": "input[aria-label='Menüde ara']",
+    "products": ".product-card"
+  },
+  "safety": {
+    "scope": "local-demo-only",
+    "allowTyping": true,
+    "allowSave": true,
+    "allowCategoryMutation": true,
+    "allowDemoDataMutation": true
+  }
+}

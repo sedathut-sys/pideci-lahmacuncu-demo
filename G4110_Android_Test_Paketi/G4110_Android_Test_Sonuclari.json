@@ -1,0 +1,536 @@
+{
+  "title": "G4.1.10 Yerel Demo Mobil Test Raporu",
+  "date": "2026-11-14T21:26:59.036Z",
+  "project": "Yerel demo projesi (yerel dosya yolu redakte edildi)",
+  "scope": "Yalnızca http://127.0.0.1:4321/pideci-lahmacuncu-demo/ yerel demo",
+  "device": "Gerçek Android USB telefonu (ADB seri kimliği redakte edildi)",
+  "physicalMetrics": {
+    "viewport": {
+      "width": 384,
+      "height": 737,
+      "dpr": 2.8125
+    },
+    "physicalPixels": "1080x2396",
+    "density": "Physical density: 450"
+  },
+  "responsive": {
+    "tests": [
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Panel ürün listesi",
+        "status": "PASS",
+        "expected": "Kıymalı Pide görünür",
+        "actual": "ürün kartı bulundu"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Düzenleyici ve seçenek bölümleri",
+        "status": "PASS",
+        "expected": "Form alanları, porsiyon ve ekstra bölümleri var",
+        "actual": "15 alan, 2 seçenek bölümü"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Kaydet/İptal ilk görünürlük",
+        "status": "PASS",
+        "expected": "Alt eylemler viewport içinde",
+        "actual": "ikisi de ilk görünümde"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Form sonuna kaydırma",
+        "status": "PASS",
+        "expected": "Formun sonuna erişilebilir",
+        "actual": "scrollTop 1322, scrollHeight 1669, clientHeight 347"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Alt düğmeler çakışması",
+        "status": "PASS",
+        "expected": "Kaydet ve İptal ayrı dokunma alanlarında",
+        "actual": "2 düğme, çakışma yok"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x560",
+        "name": "Gerçek sistem klavyesi",
+        "status": "BELİRSİZ",
+        "expected": "Android klavyesi açılıp kapanır",
+        "actual": "Playwright emülasyonu fiziksel Android klavyesini doğrulamaz"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Panel ürün listesi",
+        "status": "PASS",
+        "expected": "Kıymalı Pide görünür",
+        "actual": "ürün kartı bulundu"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Düzenleyici ve seçenek bölümleri",
+        "status": "PASS",
+        "expected": "Form alanları, porsiyon ve ekstra bölümleri var",
+        "actual": "15 alan, 2 seçenek bölümü"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Kaydet/İptal ilk görünürlük",
+        "status": "PASS",
+        "expected": "Alt eylemler viewport içinde",
+        "actual": "ikisi de ilk görünümde"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Form sonuna kaydırma",
+        "status": "PASS",
+        "expected": "Formun sonuna erişilebilir",
+        "actual": "scrollTop 1162, scrollHeight 1669, clientHeight 507"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Alt düğmeler çakışması",
+        "status": "PASS",
+        "expected": "Kaydet ve İptal ayrı dokunma alanlarında",
+        "actual": "2 düğme, çakışma yok"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "320x720",
+        "name": "Gerçek sistem klavyesi",
+        "status": "BELİRSİZ",
+        "expected": "Android klavyesi açılıp kapanır",
+        "actual": "Playwright emülasyonu fiziksel Android klavyesini doğrulamaz"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Panel ürün listesi",
+        "status": "PASS",
+        "expected": "Kıymalı Pide görünür",
+        "actual": "ürün kartı bulundu"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Düzenleyici ve seçenek bölümleri",
+        "status": "PASS",
+        "expected": "Form alanları, porsiyon ve ekstra bölümleri var",
+        "actual": "15 alan, 2 seçenek bölümü"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Kaydet/İptal ilk görünürlük",
+        "status": "PASS",
+        "expected": "Alt eylemler viewport içinde",
+        "actual": "ikisi de ilk görünümde"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Form sonuna kaydırma",
+        "status": "PASS",
+        "expected": "Formun sonuna erişilebilir",
+        "actual": "scrollTop 945, scrollHeight 1586, clientHeight 641"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Alt düğmeler çakışması",
+        "status": "PASS",
+        "expected": "Kaydet ve İptal ayrı dokunma alanlarında",
+        "actual": "2 düğme, çakışma yok"
+      },
+      {
+        "scenario": "panel",
+        "viewport": "390x844",
+        "name": "Gerçek sistem klavyesi",
+        "status": "BELİRSİZ",
+        "expected": "Android klavyesi açılıp kapanır",
+        "actual": "Playwright emülasyonu fiziksel Android klavyesini doğrulamaz"
+      }
+    ],
+    "counts": {
+      "PASS": 15,
+      "FAIL": 0,
+      "BELİRSİZ": 3
+    }
+  },
+  "playwrightMutations": {
+    "tests": [
+      {
+        "name": "Yerel demo kapsamı",
+        "status": "PASS",
+        "expected": "Panel yerel demo modunda",
+        "actual": "İşletmeci paneli / Yerel Demo"
+      },
+      {
+        "name": "Ürün düzenle ve İptal",
+        "status": "PASS",
+        "expected": "Düzenleme kaydedilmemeli",
+        "actual": "Pide\nKıymalı Pide\n₺215\n\nİncecik hamur, bol baharatlı kıyma ve taş fırın lezzeti.\n\n● Görünür\nDüzenle\nSil"
+      },
+      {
+        "name": "Ürün fiyatı Kaydet ve kalıcılık",
+        "status": "PASS",
+        "expected": "Fiyat 216 kaydedilmeli",
+        "actual": "Kart: ₺216; storage varyant fiyatı 216"
+      },
+      {
+        "name": "Ürün fiyatını test sonrası geri alma",
+        "status": "PASS",
+        "expected": "Fiyat 215 olmalı",
+        "actual": "Kaydedilen fiyat 215"
+      },
+      {
+        "name": "Porsiyon/ekstra bölümlerine kaydırma",
+        "status": "PASS",
+        "expected": "Form altına erişilmeli",
+        "actual": "{\"top\":1162,\"height\":1669,\"client\":507}"
+      },
+      {
+        "name": "Ekstra ekleme ve Kaydet",
+        "status": "PASS",
+        "expected": "Yeni ekstra 1 TL ile saklanmalı",
+        "actual": "[{\"label\":\"Ekstra kaşar\",\"price\":35},{\"label\":\"Yumurta\",\"price\":25},{\"label\":\"G4110 Geçici Ekstra\",\"price\":1}]"
+      },
+      {
+        "name": "Ekstra test değerini kaldırma",
+        "status": "PASS",
+        "expected": "Geçici ekstra kalmamalı",
+        "actual": "[{\"label\":\"Ekstra kaşar\",\"price\":35},{\"label\":\"Yumurta\",\"price\":25}]"
+      },
+      {
+        "name": "Müşteri sitesi 7 kategori 320×560",
+        "status": "PASS",
+        "expected": "7 kategori düğmesi 320px yatay taşmasız olmalı",
+        "actual": "{\"count\":7,\"rows\":3,\"width\":320}"
+      },
+      {
+        "name": "Müşteri sitesi 7 kategori 320×720",
+        "status": "PASS",
+        "expected": "7 kategori düğmesi 320px yatay taşmasız olmalı",
+        "actual": "{\"count\":7,\"rows\":3,\"width\":320}"
+      },
+      {
+        "name": "Müşteri sitesi 7 kategori 390×844",
+        "status": "PASS",
+        "expected": "7 kategori düğmesi 390px yatay taşmasız olmalı",
+        "actual": "{\"count\":7,\"rows\":3,\"width\":390}"
+      },
+      {
+        "name": "Yeni kategoriyi seçme/ürün filtresi",
+        "status": "PASS",
+        "expected": "Seçilen kategori etkin olmalı",
+        "actual": "aria-pressed=true; kart=0"
+      },
+      {
+        "name": "Müşteri sitesi 8 kategori 320×560",
+        "status": "PASS",
+        "expected": "8 kategori düğmesi 320px yatay taşmasız olmalı",
+        "actual": "{\"count\":8,\"width\":320,\"rows\":3}"
+      },
+      {
+        "name": "Müşteri sitesi 8 kategori 320×720",
+        "status": "PASS",
+        "expected": "8 kategori düğmesi 320px yatay taşmasız olmalı",
+        "actual": "{\"count\":8,\"width\":320,\"rows\":3}"
+      },
+      {
+        "name": "Müşteri sitesi 8 kategori 390×844",
+        "status": "PASS",
+        "expected": "8 kategori düğmesi 390px yatay taşmasız olmalı",
+        "actual": "{\"count\":8,\"width\":390,\"rows\":3}"
+      },
+      {
+        "name": "Uzun kategori 320×560",
+        "status": "PASS",
+        "expected": "Uzun ad viewport dışına taşmamalı",
+        "actual": "{\"text\":\"Fırından Çıkan Uzun İsimli Tatlılar\",\"width\":91.34375,\"right\":305,\"scrollWidth\":89,\"clientWidth\":89,\"scrollHeight\":62,\"whiteSpace\":\"normal\",\"overflow\":320}"
+      },
+      {
+        "name": "Uzun kategori 320×720",
+        "status": "PASS",
+        "expected": "Uzun ad viewport dışına taşmamalı",
+        "actual": "{\"text\":\"Fırından Çıkan Uzun İsimli Tatlılar\",\"width\":91.34375,\"right\":305,\"scrollWidth\":89,\"clientWidth\":89,\"scrollHeight\":61,\"whiteSpace\":\"normal\",\"overflow\":320}"
+      },
+      {
+        "name": "Uzun kategori 390×844",
+        "status": "PASS",
+        "expected": "Uzun ad viewport dışına taşmamalı",
+        "actual": "{\"text\":\"Fırından Çıkan Uzun İsimli Tatlılar\",\"width\":114.65625,\"right\":374.984375,\"scrollWidth\":113,\"clientWidth\":113,\"scrollHeight\":48,\"whiteSpace\":\"normal\",\"overflow\":390}"
+      },
+      {
+        "name": "Uzun kategori filtre seçimi",
+        "status": "PASS",
+        "expected": "Kategori seçilebilmeli",
+        "actual": "aria-pressed=true"
+      },
+      {
+        "name": "Test kategorilerini silme",
+        "status": "PASS",
+        "expected": "Geçici kategoriler listeden kaldırılmalı",
+        "actual": "[\"Pide\",\"Lahmacun\",\"Yan Ürün\",\"İçecek\"]"
+      },
+      {
+        "name": "Test sonrası yerel demo verisi",
+        "status": "PASS",
+        "expected": "Fiyat 215 ve 4 temel kategori kalmalı",
+        "actual": "{\"finalPrice\":215,\"finalSettings\":[\"Pide\",\"Lahmacun\",\"Yan Ürün\",\"İçecek\"]}"
+      }
+    ],
+    "counts": {
+      "PASS": 20,
+      "FAIL": 0,
+      "BELİRSİZ": 0
+    },
+    "isolatedContext": true
+  },
+  "androidMutations": {
+    "tests": [
+      {
+        "name": "Gerçek telefonda ürün düzenlemede İptal",
+        "status": "PASS",
+        "expected": "Kıymalı Pide",
+        "actual": "Kıymalı Pide"
+      },
+      {
+        "name": "Gerçek telefonda fiyat alanına yazma",
+        "status": "PASS",
+        "expected": "216",
+        "actual": "216"
+      },
+      {
+        "name": "Gerçek telefonda fiyat Kaydet",
+        "status": "PASS",
+        "expected": "Fiyat 216 saklanmalı",
+        "actual": "saved=true; price=216"
+      },
+      {
+        "name": "Fiyatı başlangıç değerine döndürme",
+        "status": "PASS",
+        "expected": "215",
+        "actual": "215"
+      },
+      {
+        "name": "Gerçek telefonda ekstra ekleme ve Kaydet",
+        "status": "PASS",
+        "expected": "G4110 Android Ekstra · 1 TL",
+        "actual": "[{\"label\":\"Ekstra kaşar\",\"price\":35},{\"label\":\"Yumurta\",\"price\":25},{\"label\":\"G4110 Android Ekstra\",\"price\":1}]"
+      },
+      {
+        "name": "Geçici ekstrayı silme",
+        "status": "PASS",
+        "expected": "Test ekstrası kalmamalı",
+        "actual": "[{\"label\":\"Ekstra kaşar\",\"price\":35},{\"label\":\"Yumurta\",\"price\":25}]"
+      },
+      {
+        "name": "Gerçek Android müşteri görünümü 7 kategori",
+        "status": "PASS",
+        "expected": "7 kategori düğmesi yatay taşmasız",
+        "actual": "{\"count\":7,\"rows\":3,\"width\":384,\"viewport\":384,\"labels\":[\"Tümü\",\"Pide\",\"Lahmacun\",\"Yan Ürün\",\"İçecek\",\"Sıcak Fırın Tatlıları\",\"Kahvaltı Tabağı\"]}"
+      },
+      {
+        "name": "Gerçek Android 8 kategori ve uzun ad",
+        "status": "PASS",
+        "expected": "8 kategori, uzun ad taşmasız",
+        "actual": "{\"count\":8,\"rows\":3,\"width\":384,\"viewport\":384,\"long\":{\"text\":\"Fırından Çıkan Uzun İsimli Tatlılar\",\"right\":369,\"height\":50.222225189208984,\"scrollHeight\":49,\"clientHeight\":49,\"whiteSpace\":\"normal\"}}"
+      },
+      {
+        "name": "Gerçek Android kategori filtresi",
+        "status": "PASS",
+        "expected": "Dokunulan kategori seçilmeli",
+        "actual": "aria-pressed=true"
+      },
+      {
+        "name": "Test sonrası demo değerleri",
+        "status": "PASS",
+        "expected": "Fiyat/ekstralar başlangıçta, geçici kategoriler silinmiş olmalı",
+        "actual": "{\"price\":215,\"extras\":[{\"label\":\"Ekstra kaşar\",\"price\":35},{\"label\":\"Yumurta\",\"price\":25}],\"categories\":[\"Pide\",\"Lahmacun\",\"Yan Ürün\",\"İçecek\"]}"
+      }
+    ],
+    "counts": {
+      "PASS": 10,
+      "FAIL": 0,
+      "BELİRSİZ": 0
+    },
+    "status": "PASS",
+    "initialState": {
+      "price": 215,
+      "extras": [
+        {
+          "label": "Ekstra kaşar",
+          "price": 35
+        },
+        {
+          "label": "Yumurta",
+          "price": 25
+        }
+      ],
+      "categories": [
+        "Pide",
+        "Lahmacun",
+        "Yan Ürün",
+        "İçecek"
+      ]
+    },
+    "finalState": {
+      "price": 215,
+      "extras": [
+        {
+          "label": "Ekstra kaşar",
+          "price": 35
+        },
+        {
+          "label": "Yumurta",
+          "price": 25
+        }
+      ],
+      "categories": [
+        "Pide",
+        "Lahmacun",
+        "Yan Ürün",
+        "İçecek"
+      ]
+    },
+    "dataChanges": [
+      {
+        "action": "Ürün fiyatı kaydedildi",
+        "from": 215,
+        "to": 216
+      },
+      {
+        "action": "Geçici ekstra kaydedildi",
+        "label": "G4110 Android Ekstra",
+        "price": 1
+      },
+      {
+        "action": "Kategori eklendi",
+        "name": "Sıcak Fırın Tatlıları"
+      },
+      {
+        "action": "Kategori eklendi",
+        "name": "Kahvaltı Tabağı"
+      },
+      {
+        "action": "Kategori eklendi",
+        "name": "Fırından Çıkan Uzun İsimli Tatlılar"
+      }
+    ],
+    "cleanup": {
+      "priceReverted": true,
+      "temporaryExtraRemoved": true,
+      "temporaryCategoriesRemoved": true
+    }
+  },
+  "executionNotes": [
+    "İlk fiziksel yazma denemesi 215216 değerini geçici olarak kaydetti; sonraki UI kaydıyla 215 yapıldı ve son doğrulama 215 gösterdi.",
+    "Ara denemelerde eklenen test kategorileri ve G4110 Android Ekstra silindi; son durum başlangıç değerleriyle eşleşti."
+  ],
+  "priorPhysicalSafeChecks": [
+    {
+      "name": "Kıymalı Pide düzenleyicisi",
+      "status": "PASS",
+      "actual": "Gerçek Chrome sekmesinde açıldı"
+    },
+    {
+      "name": "Alanlar ve porsiyon/ekstra",
+      "status": "PASS",
+      "actual": "15 alan; 2 bölüm"
+    },
+    {
+      "name": "Gerçek dokunmatik form kaydırma",
+      "status": "PASS",
+      "actual": "scrollTop 0 → 90.66666412353516 (önce 90.66666412353516)"
+    },
+    {
+      "name": "Android klavyesi açma",
+      "status": "PASS",
+      "actual": "IME görünür"
+    },
+    {
+      "name": "Kaydet/İptal klavye açıkken erişilebilir",
+      "status": "PASS",
+      "actual": "İptal: 292-336; Ürünü kaydet: 292-336; görünür alan 0-349px"
+    },
+    {
+      "name": "Android klavyesi kapama",
+      "status": "PASS",
+      "actual": "Geri tuşuyla kapandı"
+    },
+    {
+      "name": "İptal düğmesi ve düzenleyiciyi kapatma",
+      "status": "PASS",
+      "actual": "İptal sonrası editör kapandı; kaydetme yapılmadı"
+    }
+  ],
+  "screenshots": [
+    "panel-320x560-editor-top.png",
+    "panel-320x560-editor-bottom.png",
+    "panel-320x720-editor-top.png",
+    "panel-320x720-editor-bottom.png",
+    "panel-390x844-editor-top.png",
+    "panel-390x844-editor-bottom.png",
+    "g4110-android-mutation-start.png",
+    "g4110-android-cancel-draft.png",
+    "g4110-android-cancel-verified.png",
+    "g4110-android-keyboard-3.png",
+    "g4110-android-price-draft.png",
+    "g4110-android-price-saved.png",
+    "g4110-android-keyboard-6.png",
+    "g4110-android-price-reverted.png",
+    "g4110-android-extra-draft.png",
+    "g4110-android-extra-saved.png",
+    "g4110-android-extra-removed.png",
+    "g4110-android-keyboard-11.png",
+    "g4110-android-keyboard-12.png",
+    "g4110-android-categories-7.png",
+    "g4110-android-keyboard-14.png",
+    "g4110-android-categories-8-long.png",
+    "g4110-android-after-cleanup.png",
+    "playwright-cancel-result.png",
+    "playwright-price-saved.png",
+    "playwright-7-categories-320x560.png",
+    "playwright-8-categories-320x560.png",
+    "playwright-long-category-320x560.png",
+    "playwright-7-categories-320x720.png",
+    "playwright-8-categories-320x720.png",
+    "playwright-long-category-320x720.png",
+    "playwright-7-categories-390x844.png",
+    "playwright-8-categories-390x844.png",
+    "playwright-long-category-390x844.png"
+  ],
+  "dataChangesSummary": {
+    "productPrice": "215 → 216 Kaydet testi → 215; ilk hatalı 215216 ara değeri de 215 olarak düzeltildi.",
+    "extra": "G4110 Android Ekstra 1 TL eklendi ve silindi.",
+    "categories": "Sıcak Fırın Tatlıları, Kahvaltı Tabağı ve Fırından Çıkan Uzun İsimli Tatlılar eklendi ve silindi.",
+    "finalDemo": "Fiyat 215, iki başlangıç ekstrası ve dört temel kategori kaldı."
+  },
+  "unchanged": {
+    "siteSource": true,
+    "main": true,
+    "pr19": true,
+    "g1Pngs": true,
+    "liveSite": true,
+    "cloudflare": true,
+    "githubUpload": false,
+    "commit": false,
+    "push": false
+  },
+  "privacyReview": {
+    "visualReview": "34/34 PNG görsel olarak açılarak incelendi; kişisel mesaj veya hesap içeriği görünmedi.",
+    "redaction": "17 Android görüntüsünün paylaşım kopyasında yalnız üst durum çubuğu bildirim simgesi alanı maskelendi; yerel orijinaller korunuyor.",
+    "deviceSerial": "redacted",
+    "localProjectPath": "redacted"
+  }
+}
