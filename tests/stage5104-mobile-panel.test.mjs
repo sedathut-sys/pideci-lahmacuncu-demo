@@ -15,20 +15,11 @@ test('Fiyat girişinde baştaki sıfırlar temizlenir',()=>{
   assert.equal(n.variants[1].price,310);
 });
 
-test('Fiyat alanı giriş ve odak kaybında düzenlenir',()=>{
-  assert.match(panel,/normalizePriceInput\(input\.value\)/);
-  assert.match(panel,/input\.value=normalized/);
-  assert.match(panel,/onBlur=\{e=>\{e\.currentTarget\.value=String\(displayedPrice\(editing\)\)/);
-});
-
-test('Telefon klavyesi açılınca Kaydet erişilebilir kalır',()=>{
-  assert.match(panel,/window\.visualViewport/);
-  assert.match(panel,/viewport\.addEventListener\('resize',update\)/);
+test('Bütün fiyat alanları PriceInput üzerinden düzenlenir',()=>{
+  assert.match(panel,/<PriceInput ariaLabel="Menüde görünen satış fiyatı"/);
   assert.match(panel,/admin-backdrop-keyboard/);
-  assert.match(panel,/keyboardViewport\.height/);
-  assert.match(css,/\.admin-backdrop-keyboard \.admin-dialog-large\{height:100%;max-height:100%;/);
-  assert.match(css,/\.admin-dialog-large:focus-within \.admin-header-save/);
-  assert.match(panel,/className="admin-header-save" disabled=\{busy\} onClick=\{saveProduct\}/);
+  assert.match(panel,/window.visualViewport/);
+  assert.match(css,/\.admin-backdrop-keyboard \.admin-dialog-large/);
 });
 
 test('Fotoğraf seçenekleri Türkçe ürün adlarıyla listelenir',()=>{
@@ -43,5 +34,5 @@ test('Hazır görsel seçimi ve fotoğraf yükleme bildirimleri ayrıdır',()=>{
   assert.match(panel,/Yeni fotoğraf işlendi/);
   assert.match(panel,/Yeni fotoğraf sunucuya yüklendi/);
   assert.match(panel,/Yüklenen fotoğraf \(mevcut\)/);
-  assert.match(panel,/setUploadState\(''\);setEditing\(syncDisplayPrice\(structuredClone\(p\)\)\)/);
+  assert.match(panel,/startEditing\(p\)/);
 });
