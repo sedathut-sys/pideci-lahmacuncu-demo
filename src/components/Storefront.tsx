@@ -1,7 +1,7 @@
 import {publicUrl} from '../lib/paths';
 import { useEffect, useMemo, useState } from 'react';
 import { site, SITE_CHANGED, readDemoSettings, brandInitials, brandSubtitle, type SiteSettings } from '../data/config';
-import { CHANGE_EVENT, initialProducts, readDemoProducts, type Product } from '../data/products';
+import { CHANGE_EVENT, readDemoProducts, type Product } from '../data/products';
 import {MAX_LINE_QUANTITY, money, buildCartLine, addLine, changeQuantity, totals, refreshCart, validateCheckout, orderMessage, whatsAppLink, type CartLine, type Delivery} from '../lib/order-core.mjs';
 
 const LIVE = import.meta.env.PUBLIC_DATA_MODE === 'live';
