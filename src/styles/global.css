@@ -259,6 +259,9 @@
 .admin-header-actions{display:flex;align-items:center;gap:8px;}
 .admin-header-save{display:none;border:1px solid #9a432f;background:#aa4932;color:#fff;padding:10px 13px;border-radius:10px;font-size:14px;font-weight:800;min-height:44px;}
 @media(max-width:800px){
-  .admin-dialog-large:focus-within .admin-header-save{display:inline-flex;align-items:center;justify-content:center;}
   .admin-backdrop-keyboard .admin-header-save{display:inline-flex;}
 }
+
+/* Aşama 5.10.5: ortak kuruş fiyat girişleri */
+.admin-form input[inputmode=decimal]{font-variant-numeric:tabular-nums;}
+.admin-form input[aria-invalid=true]{border-color:#b54b36;box-shadow:0 0 0 2px #b54b361a;}
