@@ -221,3 +221,27 @@
 }
 .admin-price-help{display:block;color:#805b3e;font-weight:500;line-height:1.5;margin-top:8px;font-size:12px}
 .admin-draft-hint{background:#f7f4ed;border:1px solid #eadcc5;border-radius:10px;padding:11px 12px;font-size:13px;line-height:1.5;margin:0 0 10px;color:#655341}
+
+/* AŞAMA 5.10.1 — Fiyat, fotoğraf ve mobil düzen */
+.admin-primary-price{background:#fff8ee;border:1px solid #ebd6b9;border-radius:13px;padding:13px 15px}
+.admin-primary-price>input{font-size:18px!important;font-weight:800;color:#973a22;border-color:#d8a789!important}
+.admin-first-variant-price{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;color:#9b452d;background:#fbf5eb;border:1px solid #e8d3b5;border-radius:9px;padding:7px 9px;font-size:13px;font-weight:800;overflow-wrap:anywhere}
+.admin-first-variant-price small{font-size:10px;color:#715b49;font-weight:600}
+.admin-menu-price-preview{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f6f9f2;border:1px solid #dce9d1;border-radius:10px;padding:11px 13px;font-size:13px;color:#3b6542;line-height:1.4}
+.admin-menu-price-preview strong{font-size:19px;color:#215b35;white-space:nowrap}
+.admin-upload-status{background:#eaf7ec;color:#23603d;border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.5}
+.admin-dialog-large .admin-form{min-height:0;overscroll-behavior:contain}
+@media(max-width:720px){
+ .admin-dialog-large{width:min(100%,600px);max-height:calc(100dvh - 8px);border-radius:17px 17px 8px 8px}
+ .admin-dialog-large .admin-dialog-footer{background:white;border-top:1px solid #ede6db;padding:13px 4px max(13px,env(safe-area-inset-bottom))}
+ .admin-dialog-large .admin-dialog-footer button{min-height:48px;font-size:14px}
+ .admin-dialog-large .admin-option-row{grid-template-columns:minmax(0,1fr) minmax(88px,100px) 38px;gap:7px}
+ .admin-dialog-large .admin-option-row input,.admin-dialog-large .admin-option-row button{min-height:44px}
+ .admin-menu-price-preview{font-size:12px}
+ .admin-primary-price>input{min-height:48px}
+}
+@media(max-width:360px){
+ .admin-dialog-large .admin-option-row{grid-template-columns:minmax(0,1fr) 85px 36px;gap:5px}
+ .admin-first-variant-price{padding:6px;font-size:11px}
+ .admin-first-variant-price small{font-size:9px}
+}
