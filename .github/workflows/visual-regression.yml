@@ -1,0 +1,57 @@
+name: G1 Görsel Regresyon — Aday ve Onaylı Karşılaştırma
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "auto = onay dosyası yoksa aday, varsa karşılaştırma"
+        type: choice
+        required: true
+        default: auto
+        options:
+          - auto
+          - capture
+          - compare
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      VISUAL_MODE: ${{ inputs.mode || 'auto' }}
+    steps:
+      - name: Kodu indir
+        uses: actions/checkout@v4
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bağımlılıkları kur
+        run: npm install --no-audit --no-fund
+      - name: Chromium kur
+        run: npx playwright install --with-deps chromium
+      - name: İzole demo derlemesi
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+      - name: G1 görsel aday veya karşılaştırma testleri
+        run: npx playwright test --config=playwright.visual.config.mjs
+      - name: HTML, JSON, aday PNG ve fark görüntülerini sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-playwright-gorsel-rapor
+          path: |
+            playwright-report/visual/
+            test-results/visual/
+            test-results/visual-results.json
+            test-results/visual-baseline-candidates/
+          retention-days: 14
+          if-no-files-found: warn
