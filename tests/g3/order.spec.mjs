@@ -144,7 +144,7 @@ test('G3-11 minimum sipariş eşiği: 300 TL altı reddedilir, artınca kabul',a
   const cart=await openCart(page);
   await pickup(cart);
   await cart.getByRole('button',{name:/Sipariş mesajını görüntüle/}).click();
-  await expect(cart.getByRole('alert')).toContainText('Minimum sipariş tutarı 300,00');
+  await expect(cart.getByRole('alert')).toContainText(/Minimum sipariş tutarı\s*₺?300,00/);
   await cart.getByRole('button',{name:'Sepeti kapat'}).click();
   await addToCart(page,{name:'Antep Usulü Lahmacun'});
   const updated=await openCart(page);
