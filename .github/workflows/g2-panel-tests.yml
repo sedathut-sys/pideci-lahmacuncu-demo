@@ -1,0 +1,86 @@
+name: G2 — İşletmeci Paneli Kapsamlı Kabul Testleri
+
+on:
+  pull_request:
+    branches:
+      - feature/playwright-g8-merkezi-hata-denetimi-20261114
+
+permissions:
+  contents: read
+
+jobs:
+  g2-panel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Sadece G2 test dalını indir
+        uses: actions/checkout@v4
+
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Node bağımlılıkları
+        run: npm install --no-audit --no-fund
+
+      - name: Chromium ve Linux kütüphaneleri
+        run: npx playwright install --with-deps chromium
+
+      - name: Yalnızca yerel demo build
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+
+      - name: Proje birim testleri ve kaynak kalite kontrolleri
+        run: |
+          npm test
+          npm run quality
+
+      - name: Mevcut mobil Playwright testleri (28 koşum)
+        run: npx playwright test --config=playwright.config.mjs
+
+      - name: G1 onaylı 35 referansın değişmediğini doğrulayan gerçek karşılaştırma
+        env:
+          VISUAL_MODE: compare
+        run: npx playwright test --config=playwright.visual.config.mjs
+
+      - name: G8 konsol/ağ/404 ve sınıflandırma birim testleri
+        run: node --test tests/g8/collector.test.mjs
+
+      - name: G8 gerçek tarayıcı ve negatif sentetik hata testleri
+        run: npx playwright test --config=playwright.g8.config.mjs
+
+      - name: G2 ürün kategori fotoğraf yedek ve kalıcılık senaryoları (17 × 5)
+        run: npx playwright test --config=playwright.g2.config.mjs
+
+      - name: G2 Türkçe HTML ve JSON raporu
+        if: always()
+        run: |
+          if test -f test-results/g2-results.json; then
+            node scripts/g2-report.mjs
+          else
+            echo "G2 testleri başlayamadı: rapor dosyası oluşmadı." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: G2 ve önceki G1/G8 hata izleri raporları
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g2-panel-kapsamli-kabul-raporu
+          path: |
+            test-results/g2/
+            test-results/g2-results.json
+            test-results/g8/
+            test-results/g8-results.json
+            test-results/visual/
+            test-results/visual-results.json
+            test-results/e2e/
+            playwright-report/g2/
+            playwright-report/g8/
+            playwright-report/visual/
+            playwright-report/index.html
+          retention-days: 14
+          if-no-files-found: warn
