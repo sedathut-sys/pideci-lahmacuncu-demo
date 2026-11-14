@@ -53,6 +53,9 @@ jobs:
       - name: G8 gerçek tarayıcı ve negatif sentetik hata testleri
         run: npx playwright test --config=playwright.g8.config.mjs
 
+      - name: G2 hızlı kabul — önce 390 px profilde 17 senaryo
+        run: npx playwright test --config=playwright.g2.config.mjs --project=mobil-390px --retries=0 --timeout=30000
+
       - name: G2 ürün kategori fotoğraf yedek ve kalıcılık senaryoları (17 × 5)
         run: npx playwright test --config=playwright.g2.config.mjs
 
