@@ -50,7 +50,7 @@ test('G41-04 yeni ürün eklenince ilk müşteri renderında eski sekiz ürün l
   await addProduct(page,'G41 YENİ PİDE');
   const customer=await context.newPage();
   await watchFirstPaint(customer);
-  await openCustomer(customer,9);
+  await openCustomer(customer,{count:9});
   const observed=await firstPaint(customer);
   expect(observed.cards.length).toBeGreaterThan(0);
   expect(observed.cards.every(batch=>batch.length===9)).toBe(true);
@@ -62,7 +62,7 @@ test('G41-05 gizlenen ürün ilk yeni sekme görüntüsüne bir an dahi sızmaz'
   await productAction(page,info,'Kıymalı Pide','status').click();
   const customer=await context.newPage();
   await watchFirstPaint(customer);
-  await openCustomer(customer,7);
+  await openCustomer(customer,{count:7});
   await expect(findCard(customer,'Kıymalı Pide')).toHaveCount(0);
   const observed=await firstPaint(customer);
   expect(observed.cards.length).toBeGreaterThan(0);
@@ -75,7 +75,7 @@ test('G41-06 yeni kategori ve ürün ilk müşteri açılışından itibaren tut
   await addProduct(page,'G41 ÖZEL ÜRÜN','G41 ÖZEL');
   const customer=await context.newPage();
   await watchFirstPaint(customer);
-  await openCustomer(customer,9);
+  await openCustomer(customer,{count:9});
   await expect(customer.getByRole('group',{name:'Ürün kategorileri'}).getByRole('button',{name:'G41 ÖZEL'})).toBeVisible();
   await customer.getByRole('button',{name:'G41 ÖZEL',exact:true}).click();
   await expect(cards(customer)).toHaveCount(1);
