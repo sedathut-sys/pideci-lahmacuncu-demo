@@ -35,7 +35,7 @@ test('Müşteri: 215+35+25, iki adet, 550 TL sepet ve gel-al',async ({page},test
   await expect(dialog.locator('.option-summary strong')).toContainText('550,00');
   await capture(page,testInfo,'urun-secenekleri');
   await dialog.getByRole('button',{name:/Sepete ekle/}).click();
-  await page.getByRole('button',{name:/Sepeti aç/}).click();
+  await page.locator('.mobile-cart-bar').getByRole('button',{name:/Sepeti Gör/i}).click();
   const cart=page.getByRole('dialog',{name:'Sepetim'});
   await expect(cart).toBeVisible();
   await expect(cart.locator('.cart-total strong')).toContainText('550,00');
