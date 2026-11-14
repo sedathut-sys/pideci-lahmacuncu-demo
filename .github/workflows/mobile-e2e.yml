@@ -1,0 +1,42 @@
+name: Mobil E2E — Playwright
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Kaynak kodu indir
+        uses: actions/checkout@v4
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bağımlılıkları kur
+        run: npm install --no-audit --no-fund
+      - name: Chromium ve gerekli Linux kütüphaneleri
+        run: npx playwright install --with-deps chromium
+      - name: Statik GitHub Pages demosunu derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+      - name: Mobil senaryoları çalıştır
+        run: npm run test:mobile
+      - name: HTML raporu, ekran görüntüleri ve hata izleri
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobil-playwright-raporu
+          path: |
+            playwright-report/
+            test-results/e2e/
+          retention-days: 14
+          if-no-files-found: warn
