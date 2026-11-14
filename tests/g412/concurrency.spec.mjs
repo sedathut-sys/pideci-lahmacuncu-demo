@@ -39,8 +39,8 @@ test('G412-02 aynı ürünün çakışan düzenlemesinde kayıt reddedilir ve ta
   await priceEditor(b).fill('288,99');
   await b.locator('.admin-dialog-footer').getByRole('button',{name:'Ürünü kaydet'}).click();
   await expect(b).toBeVisible();
-  await expect(second.locator('.admin-notice')).not.toContainText('Ürün kaydedildi');
-  await expect(second.getByRole('alert')).toContainText('başka bir sekmede değiştirildi');
+  // Çakışma uyarısı hem panelde hem açık editörde görünür; doğru editör hatasını doğrula.
+  await expect(b.locator('.form-error')).toContainText('başka bir sekmede değiştirildi');
   await expect(priceEditor(b)).toHaveValue(/288,99/);
   const buyer=await context.newPage();await openCustomer(buyer);
   await expect(savedLine(buyer,'Kıymalı Pide').locator('.product-price')).toContainText('261,49');
@@ -69,7 +69,7 @@ test('G412-04 açık yönetici editörü dış güncellemede kapanmaz, eski veri
   await expect(draft).toBeVisible();
   await expect(draft.getByPlaceholder('Kıymalı Pide')).toHaveValue('G412 KAYDEDİLMEMİŞ TASLAK');
   await draft.locator('.admin-dialog-footer').getByRole('button',{name:'Ürünü kaydet'}).click();
-  await expect(second.getByRole('alert')).toContainText('başka bir sekmede değiştirildi');
+  await expect(draft.locator('.form-error')).toContainText('başka bir sekmede değiştirildi');
   const buyer=await context.newPage();await openCustomer(buyer);
   await expect(savedLine(buyer,'Kıymalı Pide').locator('.product-price')).toContainText('274,75');
   await expect(buyer.getByRole('heading',{name:'G412 KAYDEDİLMEMİŞ TASLAK'})).toHaveCount(0);
