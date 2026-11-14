@@ -1,7 +1,7 @@
 /** Vitrin ve yönetici formu aynı fiyat sınırlarını uygular. */
 export const MAX_UNIT_PRICE = 1000000;
 export const isValidUnitPrice = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= MAX_UNIT_PRICE && Math.round(value * 100) / 100 === value;
-export const formatAdminPrice = value => new Intl.NumberFormat('tr-TR', {style:'currency', currency:'TRY', minimumFractionDigits:0, maximumFractionDigits:2}).format(value);
+export const formatAdminPrice = value => new Intl.NumberFormat('tr-TR', {style:'currency', currency:'TRY', minimumFractionDigits:Number.isInteger(value)?0:2, maximumFractionDigits:2}).format(value);
 export function normalizePriceInput(value) {
   const text=String(value ?? '').trim();
   return text.replace(/^0+(?=\d)/,'');
