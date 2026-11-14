@@ -98,6 +98,7 @@ test('5.10.10: yeni ve uzun kategoriler eklendiğinde mobil grid taşmadan büy�
   const {boxes,bar}=await categoryRects(customer);
   await expect(bar.locator('button')).toHaveCount(7);
   expect(boxes[6].y).toBeGreaterThan(boxes[3].y+boxes[3].height-2);
+  expect(boxes[6].width,'Tek kalan uzun kategori tam satırı kaplamalı').toBeGreaterThan(boxes[0].width*2.5);
   await expect(bar.getByRole('button',{name:'Günün Çok Uzun Özel Lezzetleri'})).toBeVisible();
   await bar.getByRole('button',{name:'Günün Çok Uzun Özel Lezzetleri'}).click();
   await expect(customer.locator('.product-card')).toHaveCount(0);
