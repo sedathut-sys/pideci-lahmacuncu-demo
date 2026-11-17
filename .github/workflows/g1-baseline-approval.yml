@@ -1,0 +1,129 @@
+name: G1 - Onaylı Referanslarla Pozitif ve Negatif Görsel Denetim
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/g1-baseline-approval.yml'
+      - 'scripts/g1-approve-from-artifact.py'
+      - 'tests/visual/**'
+      - 'playwright.visual.config.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  approved-baselines:
+    if: github.head_ref == 'feature/playwright-g1-gorsel-regresyon-20261114' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Yalnızca G1 test dalını indir
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Onaylı 35 referansın eksiksizliğini ve SHA-256 bütünlüğünü doğrula
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p = Path('tests/visual/BASELINES_APPROVED.md')
+          assert p.is_file(), 'Approved baseline marker missing'
+          profiles = ('mobil-320px','mobil-360px','mobil-390px','mobil-430px','masaustu-1280px')
+          names = ('musteri-ana-alan.png','musteri-menu-kartlari.png',
+                   'musteri-urun-secenekleri.png','musteri-sepet.png',
+                   'panel-urun-listesi.png','panel-urun-duzenleyici.png',
+                   'panel-form-alt-bolum.png')
+          root = Path('tests/visual/__snapshots__')
+          expected = []
+          for profile in profiles:
+              for name in names:
+                  expected.append(root / profile / name)
+          found = list(root.rglob('*.png'))
+          assert len(found) == len(expected) == 35, f'Expected 35 PNGs, got {len(found)}'
+          checksum = hashlib.sha256()
+          for path in sorted(expected):
+              assert path.is_file(), 'Missing approved reference: ' + str(path)
+              rel = path.relative_to(root).as_posix()
+              raw = path.read_bytes()
+              assert raw[:8] == b'\x89PNG\r\n\x1a\n', 'Invalid approved PNG: ' + rel
+              origin = 'test-results/visual-baseline-candidates/' + rel
+              checksum.update(origin.encode() + b'\0' + len(raw).to_bytes(8, 'big') + raw)
+          expected_sha = 'ed93c886e685a6a0c168378e9004e1ffcbf07b194accae6ad00334bf3df61f40'
+          assert checksum.hexdigest() == expected_sha, 'Approved screenshot checksum mismatch'
+          assert expected_sha in p.read_text('utf-8'), 'Approval marker not linked to validated images'
+          print('PASS: all 35 user-approved screenshots are intact, exact SHA-256 match.')
+          PY
+
+      - name: Node.js 24 kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Playwright Chromium ve bağımlılıkları kur
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: İzole Taş Fırın demosunu derle
+        env:
+          PUBLIC_DATA_MODE: demo
+          PUBLIC_SITE_READY: 'false'
+          PUBLIC_SITE_URL: 'https://sedathut-sys.github.io/pideci-lahmacuncu-demo/'
+        run: npm run build
+
+      - name: Pozitif test - tüm 35 ekran onaylı referansla karşılaştırılsın
+        env:
+          VISUAL_MODE: compare
+        run: npx playwright test --config=playwright.visual.config.mjs
+
+      - name: Başarılı görsel karşılaştırma raporunu kaydet
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-onayli-gorsel-karsilastirma
+          path: |
+            playwright-report/visual/
+            test-results/visual/
+            test-results/visual-results.json
+          retention-days: 14
+
+      - name: Negatif test - kasıtlı CSS bozulması gerçekten yakalanmalı
+        env:
+          VISUAL_MODE: compare
+          G1_NEGATIVE_TEST: '1'
+        shell: bash
+        run: |
+          set +e
+          npx playwright test --config=playwright.visual.config.mjs \
+            --project=mobil-390px \
+            --grep="G1 müşteri: ana karşılama alanı" \
+            > "$RUNNER_TEMP/g1-negative.log" 2>&1
+          status=$?
+          set -e
+          cat "$RUNNER_TEMP/g1-negative.log"
+          if [ "$status" -eq 0 ]; then
+            echo "KRITIK: kasıtlı görsel bozulma yakalanmadı!" >&2
+            exit 1
+          fi
+          if ! grep -Eiq "toHaveScreenshot|Screenshot comparison failed" "$RUNNER_TEMP/g1-negative.log"; then
+            echo "KRITIK: başarısızlık görsel karşılaştırmadan kaynaklanmıyor!" >&2
+            exit 1
+          fi
+          echo "G1 NEGATIF KABUL: Kasıtlı görsel bozulma beklendiği gibi algılandı."
+
+      - name: Negatif test görsel farklarını sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-negatif-test-fark-gorselleri
+          path: |
+            playwright-report/visual/
+            test-results/visual/
+            test-results/visual-results.json
+          retention-days: 14
+          if-no-files-found: warn
